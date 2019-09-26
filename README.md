@@ -4,11 +4,14 @@ Official Keras Implementation of ChromaGAN: Adversarial Picture Colorization wit
 ## Network Architecture
 [<img width="997" src="Figures/ColorizationModel.png?raw=true">](Figures/ColorizationModel.png?raw=true)
 
+## Network Parameters
+All the parameters can be modified from config.py
+
 
 ## Training
 To train the network:
 ```
-python 
+python ChromaGAN.py
   ```
   
   ## Testing
