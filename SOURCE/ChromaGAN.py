@@ -1,33 +1,29 @@
+
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Feb  8 17:55:53 2018
+@author: rahul.ghosh
+"""
+
 import os
 import tensorflow as tf
 import configClass as config
-import neural_network
 import numpy as np
 import cv2
-from keras import applications
-import keras
-from keras.utils import plot_model
-from keras.callbacks import TensorBoard
-from time import time
-import tensorflow.contrib.slim as slim
-from functools import partial
-from keras.models import Sequential, Model
-from keras.optimizers import Adam
-import matplotlib.pyplot as plt
-import datetime
-from keras.layers import Input
 import dataClass as data
-from keras.utils.vis_utils import plot_model
-import keras.losses
+import datetime
+from functools import partial
 
+import keras
+from keras import applications
+from keras.callbacks import TensorBoard
+from keras.optimizers import Adam
+from keras.layers import Input
 from keras.layers.merge import _Merge
-import argparse
-from keras.layers.convolutional import Convolution2D, Conv2DTranspose
-from keras.layers.normalization import BatchNormalization
 from keras.layers.advanced_activations import LeakyReLU
 from keras import backend as K
-from keras.models import load_model
-from keras.models import model_from_json
+from keras.models import load_model, model_from_json, Model
+
 
 
 GRADIENT_PENALTY_WEIGHT = 10  # As per the paper
@@ -176,24 +172,6 @@ class MODEL():
         self.g_loss_array = []
 
 
-
-    def discriminator_old(self):
-        #input_img = Input(shape=self.img_shape_2, name='ab_input')
-        input_ab = Input(shape=self.img_shape_2, name='ab_input')
-        input_l = Input(shape=self.img_shape_1, name='l_input')
-        net = keras.layers.concatenate([input_l, input_ab])
-        net =  keras.layers.Conv2D(64, (4, 4), padding='same', strides=(2, 2))(net) # 112, 112, 64
-        net = BatchNormalization()(net)
-        net =  keras.layers.Conv2D(128, (4, 4), padding='same', strides=(2, 2))(net) # 56, 56, 128
-        net = BatchNormalization()(net)
-        net =  keras.layers.Conv2D(256, (4, 4), padding='same', strides=(2, 2))(net) # 28, 28, 256
-        net = BatchNormalization()(net)
-        net =  keras.layers.Conv2D(512, (4, 4), padding='same', strides=(1, 1))(net) # 28, 28, 512
-        net = BatchNormalization()(net)
-        net =  keras.layers.Conv2D(1, (4, 4), padding='same', strides=(1, 1), activation='tanh')(net)  # 28, 28,1
-
-        return Model([input_ab, input_l], net)
-
     def discriminator(self):
         input_ab = Input(shape=self.img_shape_2, name='ab_input')
         input_l = Input(shape=self.img_shape_1, name='l_input')
@@ -311,12 +289,18 @@ class MODEL():
                     write_log(self.callback, self.train_names, g_loss_col, it)
                     it = it+1
                     g_loss =  g_loss_col[0] #+ g_loss_disc[0]+ g_loss_col[2])
+                    ##original = np.concatenate((batchX, batchY), axis=3)
+                    #fake_ab, _ = self.colorizationModel.predict(np.tile(batchX,[1,1,1,3]))
                     d_loss_real = self.discriminator_model.train_on_batch([batchX, batchY, l_3], [positive_y, negative_y, dummy_y])
 
+
+                    #d_loss_real = self.discriminator.train_on_batch([batchY, batchX], valid)
+                    #d_loss_fake = self.discriminator.train_on_batch([fake_ab, batchX], fake)
+                    #d_loss = 0.5 * np.add(d_loss_real, d_loss_fake)
                     if batch%10 ==0: 
                         print("[Epoch %d] [Batch %d/%d] [loss: %08f]" %  ( epoch, batch,total_batch, g_loss_col[0]))
-
-                    if (batch+1)%10000 ==0: 
+                       # elapsed_time = datetime.datetime.now() - start_time
+                    if (batch+1)%10 ==0: 
                         save_path = os.path.join(config.OUT_DIR, "test33/my_model_combined33Epoch%d_it%d.h5" % (epoch, it))
                         self.combined.save(save_path)  # creates a HDF5 file 'my_model.h5'
                         save_path = os.path.join(config.OUT_DIR, "test33/my_model_colorization33Epoch%d_it%d.h5" % (epoch, it))
@@ -354,6 +338,8 @@ class MODEL():
         avg_cost3 = 0
         avg_ssim = 0
         avg_psnr = 0
+        save_path = os.path.join(config.OUT_DIR, "test33_final/my_model_colorization33Epoch2Weihts.h5")
+        self.colorizationModel.load_weights(save_path)
         test_data = data.DATA(config.TEST_DIR)
         total_batch = int(test_data.size/config.BATCH_SIZE)
         print(test_data.size)
@@ -371,7 +357,17 @@ class MODEL():
                     predResult = reconstruct(deprocess(batchX), deprocess(predY), filelist, epoch, i)
                     originalResult = reconstruct_no(deprocess(batchX), deprocess(batchY), filelist, 1000, i)
                     avg_ssim += tf.keras.backend.eval( tf.image.ssim(tf.convert_to_tensor(originalResult, dtype=tf.float32), tf.convert_to_tensor(predResult, dtype=tf.float32), max_val=255))/test_data.size 
-                    avg_psnr += tf.keras.backend.eval( tf.image.psnr(tf.convert_to_tensor(originalResult, dtype=tf.float32), tf.convert_to_tensor(predResult, dtype=tf.float32), max_val=255))/test_data.size 
+                    avg_psnr += tf.keras.backend.eval( tf.image.psnr(tf.convert_to_tensor(originalResult, dtype=tf.float32), tf.convert_to_tensor(predResult, dtype=tf.float32), max_val=255))/test_data.size
+             #   self.test_loss_array.append(loss[1])  
+                    it = it+1
+                    if it%50 ==0: 
+
+                        print(it)
+                        print(" ----------  loss =", "{:.8f}------------------".format(avg_cost))
+                        print(" ----------  upsamplingloss =", "{:.8f}------------------".format(avg_cost2))
+                        print(" ----------  classification_loss =", "{:.8f}------------------".format(avg_cost3))
+                        print(" ----------  ssim loss =", "{:.8f}------------------".format(avg_ssim))
+                        print(" ----------  psnr loss =", "{:.8f}------------------".format(avg_psnr))
 
         print(" ----------  loss =", "{:.8f}------------------".format(avg_cost))
         print(" ----------  upsamplingloss =", "{:.8f}------------------".format(avg_cost2))
@@ -394,3 +390,4 @@ if __name__ == '__main__':
         colorizationModel = MODEL()
         print("Model Initialized")
         colorizationModel.train(train_data, log)
+        #colorizationModel.sample_images(4)
