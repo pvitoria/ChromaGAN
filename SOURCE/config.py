@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Feb  8 17:16:29 2018
-
-@author: rahul.ghosh
-"""
-
 import os
 
 # DIRECTORY INFORMATION
