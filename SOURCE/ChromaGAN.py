@@ -1,9 +1,4 @@
 
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Feb  8 17:55:53 2018
-@author: rahul.ghosh
-"""
 
 import os
 import tensorflow as tf
