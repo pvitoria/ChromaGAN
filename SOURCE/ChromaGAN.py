@@ -1,13 +1,6 @@
-
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Feb  8 17:55:53 2018
-@author: rahul.ghosh
-"""
-
 import os
 import tensorflow as tf
-import config1k as config
+import configClass as config
 import neural_network
 import numpy as np
 import cv2
@@ -318,17 +311,11 @@ class MODEL():
                     write_log(self.callback, self.train_names, g_loss_col, it)
                     it = it+1
                     g_loss =  g_loss_col[0] #+ g_loss_disc[0]+ g_loss_col[2])
-                    ##original = np.concatenate((batchX, batchY), axis=3)
-                    #fake_ab, _ = self.colorizationModel.predict(np.tile(batchX,[1,1,1,3]))
                     d_loss_real = self.discriminator_model.train_on_batch([batchX, batchY, l_3], [positive_y, negative_y, dummy_y])
 
-
-                    #d_loss_real = self.discriminator.train_on_batch([batchY, batchX], valid)
-                    #d_loss_fake = self.discriminator.train_on_batch([fake_ab, batchX], fake)
-                    #d_loss = 0.5 * np.add(d_loss_real, d_loss_fake)
                     if batch%10 ==0: 
                         print("[Epoch %d] [Batch %d/%d] [loss: %08f]" %  ( epoch, batch,total_batch, g_loss_col[0]))
-                       # elapsed_time = datetime.datetime.now() - start_time
+
                     if (batch+1)%10000 ==0: 
                         save_path = os.path.join(config.OUT_DIR, "test33/my_model_combined33Epoch%d_it%d.h5" % (epoch, it))
                         self.combined.save(save_path)  # creates a HDF5 file 'my_model.h5'
@@ -367,8 +354,6 @@ class MODEL():
         avg_cost3 = 0
         avg_ssim = 0
         avg_psnr = 0
-        save_path = os.path.join(config.OUT_DIR, "test33_final/my_model_colorization33Epoch2Weihts.h5")
-        self.colorizationModel.load_weights(save_path)
         test_data = data.DATA(config.TEST_DIR)
         total_batch = int(test_data.size/config.BATCH_SIZE)
         print(test_data.size)
@@ -386,17 +371,7 @@ class MODEL():
                     predResult = reconstruct(deprocess(batchX), deprocess(predY), filelist, epoch, i)
                     originalResult = reconstruct_no(deprocess(batchX), deprocess(batchY), filelist, 1000, i)
                     avg_ssim += tf.keras.backend.eval( tf.image.ssim(tf.convert_to_tensor(originalResult, dtype=tf.float32), tf.convert_to_tensor(predResult, dtype=tf.float32), max_val=255))/test_data.size 
-                    avg_psnr += tf.keras.backend.eval( tf.image.psnr(tf.convert_to_tensor(originalResult, dtype=tf.float32), tf.convert_to_tensor(predResult, dtype=tf.float32), max_val=255))/test_data.size
-             #   self.test_loss_array.append(loss[1])  
-                    it = it+1
-                    if it%50 ==0: 
-
-                        print(it)
-                        print(" ----------  loss =", "{:.8f}------------------".format(avg_cost))
-                        print(" ----------  upsamplingloss =", "{:.8f}------------------".format(avg_cost2))
-                        print(" ----------  classification_loss =", "{:.8f}------------------".format(avg_cost3))
-                        print(" ----------  ssim loss =", "{:.8f}------------------".format(avg_ssim))
-                        print(" ----------  psnr loss =", "{:.8f}------------------".format(avg_psnr))
+                    avg_psnr += tf.keras.backend.eval( tf.image.psnr(tf.convert_to_tensor(originalResult, dtype=tf.float32), tf.convert_to_tensor(predResult, dtype=tf.float32), max_val=255))/test_data.size 
 
         print(" ----------  loss =", "{:.8f}------------------".format(avg_cost))
         print(" ----------  upsamplingloss =", "{:.8f}------------------".format(avg_cost2))
@@ -419,4 +394,3 @@ if __name__ == '__main__':
         colorizationModel = MODEL()
         print("Model Initialized")
         colorizationModel.train(train_data, log)
-        #colorizationModel.sample_images(4)
