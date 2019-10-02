@@ -2,6 +2,7 @@ import os
 
 # DIRECTORY INFORMATION
 DATASET = "imagenet"
+TEST_NAME ="Test1"
 ROOT_DIR = os.path.abspath('../')
 DATA_DIR = os.path.join(ROOT_DIR, 'DATASET/'+DATASET+'/')
 OUT_DIR = os.path.join(ROOT_DIR, 'RESULT/'+DATASET+'/')
@@ -20,5 +21,5 @@ SEED = 128
 
 # TRAINING INFORMATION
 USE_PRETRAINED = False
-PRETRAINED = "model2_1.ckpt"
+PRETRAINED = "pretrained_file.ckpt"
 NUM_EPOCHS = 5
