@@ -8,7 +8,7 @@ Created on Thu Feb  8 17:27:28 2018
 import numpy as np
 import cv2
 import os
-import configClass as config
+import config as config
 
 
 class DATA():
