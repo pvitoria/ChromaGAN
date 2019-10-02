@@ -154,8 +154,9 @@ class MODEL():
         self.combined.compile(loss=['mse','kld', wasserstein_loss],
                             loss_weights=[1.0, 0.003, -0.1],
                             optimizer=optimizer) #1/300
-
-        self.log_path = './logs33'
+        self.log_path= os.path.join(config.LOG_DIR,config.TEST_NAME)
+        if not os.path.exists(self.log_path):
+                os.makedirs(self.log_path)
         self.callback = TensorBoard(self.log_path)
         self.callback.set_model(self.combined)
         self.train_names = ['loss', 'mse_loss', 'kullback_loss', 'wasserstein_loss']
@@ -294,10 +295,8 @@ class MODEL():
                     #d_loss_real = self.discriminator.train_on_batch([batchY, batchX], valid)
                     #d_loss_fake = self.discriminator.train_on_batch([fake_ab, batchX], fake)
                     #d_loss = 0.5 * np.add(d_loss_real, d_loss_fake)
-                    if batch%10 ==0: 
+                    if (batch+1)%1000 ==0: 
                         print("[Epoch %d] [Batch %d/%d] [loss: %08f]" %  ( epoch, batch,total_batch, g_loss_col[0]))
-                       # elapsed_time = datetime.datetime.now() - start_time
-                    if (batch+1)%10 ==0: 
                         save_path = os.path.join(save_models_path, "my_model_combined33Epoch%d_it%d.h5" % (epoch, it))
                         self.combined.save(save_path)  # creates a HDF5 file 'my_model.h5'
                         save_path = os.path.join(save_models_path, "my_model_colorization33Epoch%d_it%d.h5" % (epoch, it))
