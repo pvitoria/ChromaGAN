@@ -1,2 +1,4 @@
 opencv-python==4.1.0
 numpy==1.15.4
+keras
+functools
