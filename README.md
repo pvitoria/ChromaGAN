@@ -13,8 +13,7 @@ import os
 DATASET = "imagenet"
 TEST_NAME ="TEST1"
 ROOT_DIR = os.path.abspath('../')
-ROOT_DIR2 = os.path.abspath('../../LetTherebecolor/')
-DATA_DIR = os.path.join(ROOT_DIR2, 'DATASET/'+DATASET+'/')
+DATA_DIR = os.path.join(ROOT_DIR, 'DATASET/'+DATASET+'/')
 OUT_DIR = os.path.join(ROOT_DIR, 'RESULT/'+DATASET+'/')
 MODEL_DIR = os.path.join(ROOT_DIR, 'MODEL/')
 LOG_DIR = os.path.join(ROOT_DIR, 'LOGS/'+DATASET+'/')
