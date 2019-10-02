@@ -2,7 +2,7 @@
 
 import os
 import tensorflow as tf
-import configClass as config
+import config as config
 import numpy as np
 import cv2
 import dataClass as data
