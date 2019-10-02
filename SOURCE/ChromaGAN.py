@@ -265,7 +265,9 @@ class MODEL():
         dummy_y = np.zeros((config.BATCH_SIZE, 1), dtype=np.float32)
         total_batch = int(data.size/config.BATCH_SIZE)
         it = 0
-
+        save_models_path = os.path.join(config.OUT_DIR,config.TEST_NAME)
+        if not os.path.exists(save_models_path):
+                os.makedirs(save_models_path)
         #save_path = os.path.join(config.OUT_DIR, "test33_/my_model_colorization33Epoch0.h5")
         #self.colorizationModel =load_model(save_path)  # creates a HDF5 file 'my_model.h5'
         #save_path = os.path.join(config.OUT_DIR, "test33_/my_model_discriminator33Epoch0.h5")
@@ -296,31 +298,31 @@ class MODEL():
                         print("[Epoch %d] [Batch %d/%d] [loss: %08f]" %  ( epoch, batch,total_batch, g_loss_col[0]))
                        # elapsed_time = datetime.datetime.now() - start_time
                     if (batch+1)%10 ==0: 
-                        save_path = os.path.join(config.OUT_DIR, "test33/my_model_combined33Epoch%d_it%d.h5" % (epoch, it))
+                        save_path = os.path.join(save_models_path, "my_model_combined33Epoch%d_it%d.h5" % (epoch, it))
                         self.combined.save(save_path)  # creates a HDF5 file 'my_model.h5'
-                        save_path = os.path.join(config.OUT_DIR, "test33/my_model_colorization33Epoch%d_it%d.h5" % (epoch, it))
+                        save_path = os.path.join(save_models_path, "my_model_colorization33Epoch%d_it%d.h5" % (epoch, it))
                         self.colorizationModel.save(save_path)  # creates a HDF5 file 'my_model.h5'
-                        save_path = os.path.join(config.OUT_DIR, "test33/my_model_discriminator33Epoch%d_it%d.h5" % (epoch, it))
+                        save_path = os.path.join(save_models_path, "my_model_discriminator33Epoch%d_it%d.h5" % (epoch, it))
                         self.discriminator.save_weights(save_path)  # creates a HDF5 file 'my_model.h5'
-                        save_path = os.path.join(config.OUT_DIR, "test33/my_model_combined33Epoch%d_it%dWeihts.h5" % (epoch, it))
+                        save_path = os.path.join(save_models_path, "my_model_combined33Epoch%d_it%dWeihts.h5" % (epoch, it))
                         self.combined.save(save_path)  # creates a HDF5 file 'my_model.h5'
-                        save_path = os.path.join(config.OUT_DIR, "test33/my_model_colorization33Epoch%d_it%dWeihts.h5" % (epoch, it))
+                        save_path = os.path.join(save_models_path, "my_model_colorization33Epoch%d_it%dWeihts.h5" % (epoch, it))
                         self.colorizationModel.save(save_path)  # creates a HDF5 file 'my_model.h5'
-                        save_path = os.path.join(config.OUT_DIR, "test33/my_model_discriminator33Epoch%d_it%dWeihts.h5" % (epoch, it))
+                        save_path = os.path.join(save_models_path, "my_model_discriminator33Epoch%d_it%dWeihts.h5" % (epoch, it))
                         self.discriminator.save_weights(save_path)  # creates a HDF5 file 'my_model.h5'
 
-                save_path = os.path.join(config.OUT_DIR, "test33/my_model_combined33Epoch%d.h5" % epoch)
+                save_path = os.path.join(save_models_path, "my_model_combined33Epoch%d.h5" % epoch)
                 self.combined.save(save_path)  # creates a HDF5 file 'my_model.h5'
-                save_path = os.path.join(config.OUT_DIR, "test33/my_model_colorization33Epoch%d.h5" % epoch)
+                save_path = os.path.join(save_models_path, "my_model_colorization33Epoch%d.h5" % epoch)
                 self.colorizationModel.save(save_path)  # creates a HDF5 file 'my_model.h5'
-                save_path = os.path.join(config.OUT_DIR, "test33/my_model_discriminator33Epoch%d.h5" % epoch)
+                save_path = os.path.join(save_models_path, "my_model_discriminator33Epoch%d.h5" % epoch)
                 self.discriminator.save(save_path)  # creates a HDF5 file 'my_model.h5'
 
-                save_path = os.path.join(config.OUT_DIR, "test33/my_model_combined33Epoch%dWeihts.h5" % epoch)
+                save_path = os.path.join(save_models_path, "my_model_combined33Epoch%dWeihts.h5" % epoch)
                 self.combined.save_weights(save_path)  # creates a HDF5 file 'my_model.h5'
-                save_path = os.path.join(config.OUT_DIR, "test33/my_model_colorization33Epoch%dWeihts.h5" % epoch)
+                save_path = os.path.join(save_models_path, "my_model_colorization33Epoch%dWeihts.h5" % epoch)
                 self.colorizationModel.save_weights(save_path)  # creates a HDF5 file 'my_model.h5'
-                save_path = os.path.join(config.OUT_DIR, "test33/my_model_discriminator33Epoch%dWeihts.h5" % epoch)
+                save_path = os.path.join(save_models_path, "my_model_discriminator33Epoch%dWeihts.h5" % epoch)
                 self.discriminator.save_weights(save_path)  # creates a HDF5 file 'my_model.h5'
                 #self.sample_images(epoch, batch)
 
