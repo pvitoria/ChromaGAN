@@ -1,5 +1,5 @@
 # ChromaGAN
-Official Keras Implementation of ChromaGAN: Adversarial Picture Colorization with Semantic Class Distribution
+Official Keras Implementation of ChromaGAN: Adversarial Picture Colorization with Semantic Class Distribution [<a href="https://arxiv.org/pdf/1907.09837.pdf"> arXiv</a>]
 
 ## Network Architecture
 [<img width="997" src="Figures/ColorizationModel.png?raw=true">](Figures/ColorizationModel.png?raw=true)
