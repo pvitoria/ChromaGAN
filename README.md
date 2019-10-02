@@ -43,7 +43,7 @@ python ChromaGAN.py
   ## Testing
 To test the network:
 ```
-python 
+python ChromaGANprint.py
 ```
 
     
