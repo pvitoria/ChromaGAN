@@ -34,7 +34,6 @@ def deprocess(imgs):
 
 
 def reconstruct(batchX, predictedY, filelist, epoch, i):
-    #for i in range(config.BATCH_SIZE):
     result = np.concatenate((batchX[i], predictedY[i]), axis=2)
     result = cv2.cvtColor(result, cv2.COLOR_Lab2BGR)
     save_path = os.path.join(config.OUT_DIR, "ChromaGAN_results/"+ filelist[i][:-4] +  "Epoch%dreconstructed.jpg" % epoch)
@@ -42,7 +41,6 @@ def reconstruct(batchX, predictedY, filelist, epoch, i):
     return result
 
 def reconstruct_no(batchX, predictedY, filelist, epoch, i):
-    #for i in range(config.BATCH_SIZE):
     result = np.concatenate((batchX[i], predictedY[i]), axis=2)
     result = cv2.cvtColor(result, cv2.COLOR_Lab2BGR)
     return result
@@ -269,14 +267,6 @@ class MODEL():
         save_models_path = os.path.join(config.OUT_DIR,config.TEST_NAME)
         if not os.path.exists(save_models_path):
                 os.makedirs(save_models_path)
-        #save_path = os.path.join(config.OUT_DIR, "test33_/my_model_colorization33Epoch0.h5")
-        #self.colorizationModel =load_model(save_path)  # creates a HDF5 file 'my_model.h5'
-        #save_path = os.path.join(config.OUT_DIR, "test33_/my_model_discriminator33Epoch0.h5")
-        #self.discriminator = model_from_json(open(save_path).read())
-        #self.discriminator.load_weights(save_path)
-        #self.discriminator =load_model(save_path, custom_objects={'wasserstein_loss': wasserstein_loss})  # creates a HDF5 file 'my_model.h5'
-        #save_path = os.path.join(config.OUT_DIR, "test33_/my_model_combined33Epoch0.h5")
-        #self.combined =load_model(save_path , custom_objects={'wasserstein_loss': wasserstein_loss})  # creates a HDF5 file 'my_model.h5'
         for epoch in range(config.NUM_EPOCHS):
                 for batch in range(int(data.size/config.BATCH_SIZE)):
                     batchX, batchY, _ = data.generate_batch()
@@ -286,15 +276,7 @@ class MODEL():
                                                         [batchY, predictVGG, positive_y])
                     write_log(self.callback, self.train_names, g_loss_col, it)
                     it = it+1
-                    g_loss =  g_loss_col[0] #+ g_loss_disc[0]+ g_loss_col[2])
-                    ##original = np.concatenate((batchX, batchY), axis=3)
-                    #fake_ab, _ = self.colorizationModel.predict(np.tile(batchX,[1,1,1,3]))
                     d_loss_real = self.discriminator_model.train_on_batch([batchX, batchY, l_3], [positive_y, negative_y, dummy_y])
-
-
-                    #d_loss_real = self.discriminator.train_on_batch([batchY, batchX], valid)
-                    #d_loss_fake = self.discriminator.train_on_batch([fake_ab, batchX], fake)
-                    #d_loss = 0.5 * np.add(d_loss_real, d_loss_fake)
                     if (batch+1)%1000 ==0: 
                         print("[Epoch %d] [Batch %d/%d] [loss: %08f]" %  ( epoch, batch,total_batch, g_loss_col[0]))
                         save_path = os.path.join(save_models_path, "my_model_combined33Epoch%d_it%d.h5" % (epoch, it))
@@ -379,13 +361,12 @@ if __name__ == '__main__':
     with open(os.path.join(config.LOG_DIR, str(datetime.datetime.now().strftime("%Y%m%d")) + "_" + str(config.BATCH_SIZE) + "_" + str(config.NUM_EPOCHS) + ".txt"), "w") as log:
         log.write(str(datetime.datetime.now()) + "\n")
         log.write("Use Pretrained Weights: " + str(config.USE_PRETRAINED) + "\n")
-        print(config.BATCH_SIZE)
-        print("Use Pretrained Weights")
+        print("Use Pretrained Weights"  + str(config.USE_PRETRAINED))
         log.write("Pretrained Model: " + config.PRETRAINED + "\n")
         print("Pretrained Model")
         train_data = data.DATA(config.TRAIN_DIR)
-        print("train data")
+        print("Train data loaded")
         colorizationModel = MODEL()
         print("Model Initialized")
+        print("Start training")
         colorizationModel.train(train_data, log)
-        #colorizationModel.sample_images(4)
