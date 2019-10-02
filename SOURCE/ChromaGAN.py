@@ -373,6 +373,8 @@ class MODEL():
 
 
 if __name__ == '__main__':
+    if not os.path.exists(config.LOG_DIR):
+        os.makedirs(config.LOG_DIR)
     with open(os.path.join(config.LOG_DIR, str(datetime.datetime.now().strftime("%Y%m%d")) + "_" + str(config.BATCH_SIZE) + "_" + str(config.NUM_EPOCHS) + ".txt"), "w") as log:
         log.write(str(datetime.datetime.now()) + "\n")
         log.write("Use Pretrained Weights: " + str(config.USE_PRETRAINED) + "\n")
