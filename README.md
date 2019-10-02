@@ -6,7 +6,34 @@ Official Keras Implementation of ChromaGAN: Adversarial Picture Colorization wit
 
 ## Network Parameters
 All the parameters can be modified from config.py
+```
+import os
 
+# DIRECTORY INFORMATION
+DATASET = "imagenet"
+TEST_NAME ="TEST1"
+ROOT_DIR = os.path.abspath('../')
+ROOT_DIR2 = os.path.abspath('../../LetTherebecolor/')
+DATA_DIR = os.path.join(ROOT_DIR2, 'DATASET/'+DATASET+'/')
+OUT_DIR = os.path.join(ROOT_DIR, 'RESULT/'+DATASET+'/')
+MODEL_DIR = os.path.join(ROOT_DIR, 'MODEL/')
+LOG_DIR = os.path.join(ROOT_DIR, 'LOGS/'+DATASET+'/')
+
+TRAIN_DIR = "train_full"
+TEST_DIR = "histo"
+
+# DATA INFORMATION
+IMAGE_SIZE = 224
+BATCH_SIZE = 10
+
+# RANDOM NUMBER GENERATOR INFORMATION
+SEED = 128
+
+# TRAINING INFORMATION
+USE_PRETRAINED = False
+PRETRAINED = "model2_1.ckpt"
+NUM_EPOCHS = 5
+  ```
 
 ## Training
 To train the network:
