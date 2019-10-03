@@ -260,12 +260,6 @@ class MODEL():
                     write_log(self.callback, self.disc_names, d_loss_real, it)
                     if (batch+1)%1000 ==0: 
                         print("[Epoch %d] [Batch %d/%d] [loss: %08f]" %  ( epoch, batch,total_batch, g_loss_col[0]))
-                        save_path = os.path.join(save_models_path, "my_model_combinedEpoch%d_it%d.h5" % (epoch, it))
-                        self.combined.save(save_path)  
-                        save_path = os.path.join(save_models_path, "my_model_colorizationEpoch%d_it%d.h5" % (epoch, it))
-                        self.colorizationModel.save(save_path)  
-                        save_path = os.path.join(save_models_path, "my_model_discriminatorEpoch%d_it%d.h5" % (epoch, it))
-                        self.discriminator.save_weights(save_path) 
                 save_path = os.path.join(save_models_path, "my_model_combinedEpoch%d.h5" % epoch)
                 self.combined.save(save_path) 
                 save_path = os.path.join(save_models_path, "my_model_colorizationEpoch%d.h5" % epoch)
