@@ -1,11 +1,16 @@
 # ChromaGAN
 Official Keras Implementation of ChromaGAN: Adversarial Picture Colorization with Semantic Class Distribution [<a href="https://arxiv.org/pdf/1907.09837.pdf"> arXiv</a>]
 
+## Requirements
+```
+pip install -r requirements.txt
+```
+
 ## Network Architecture
 [<img width="997" src="Figures/ColorizationModel.png?raw=true">](Figures/ColorizationModel.png?raw=true)
 
 ## Network Parameters
-All the parameters can be modified from config.py
+All the parameters can be modified from the config.py file.
 ```
 import os
 
