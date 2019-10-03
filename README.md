@@ -14,7 +14,9 @@ Official Keras Implementation of ChromaGAN: Adversarial Picture Colorization wit
 
 ## Prerequisits 
 Linux 
+
 Python 3
+
 NVIDIA GPU + CUDA CuDNN (CPU mode and CUDA without CuDNN may work with minimal modification, but untested)
 
 ## Getting Started
