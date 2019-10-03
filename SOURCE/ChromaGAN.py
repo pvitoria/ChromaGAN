@@ -244,7 +244,7 @@ class MODEL():
         dummy_y = np.zeros((config.BATCH_SIZE, 1), dtype=np.float32)
         total_batch = int(data.size/config.BATCH_SIZE)
         it = 0
-        save_models_path =os.path.join(os.path.join(config.MODEL_DIR,config.DATASET),config.TEST_NAME)
+        save_models_path =os.path.join(config.MODEL_DIR,config.TEST_NAME)
         if not os.path.exists(save_models_path):
                 os.makedirs(save_models_path)
         for epoch in range(config.NUM_EPOCHS):
