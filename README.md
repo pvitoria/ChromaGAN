@@ -20,7 +20,7 @@ pip install -r requirements.txt
 ```
 ### Clone Repository
 ```
-git clone git@github.com:pvitoria/ChromaGAN.git
+git clone https://github.com/pvitoria/ChromaGAN
 cd ChromaGAN/
 ```
 
