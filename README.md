@@ -14,14 +14,16 @@ Official Keras Implementation of ChromaGAN: Adversarial Picture Colorization wit
 
 ## Getting Started
 
-### Requirements
-```
-pip install -r requirements.txt
-```
+
 ### Clone Repository
 ```
 git clone https://github.com/pvitoria/ChromaGAN
 cd ChromaGAN/
+```
+
+### Requirements
+```
+pip install -r requirements.txt
 ```
 
 ### Download the dataset
