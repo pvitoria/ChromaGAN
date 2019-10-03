@@ -1,5 +1,3 @@
-
-
 import os
 import tensorflow as tf
 import config as config
@@ -21,7 +19,7 @@ from keras.models import load_model, model_from_json, Model
 
 
 
-GRADIENT_PENALTY_WEIGHT = 10  # As per the paper
+GRADIENT_PENALTY_WEIGHT = 10  
 
 
 
@@ -32,16 +30,16 @@ def deprocess(imgs):
     return imgs.astype(np.uint8)
 
 
-
-def reconstruct(batchX, predictedY, filelist, epoch, i):
-    result = np.concatenate((batchX[i], predictedY[i]), axis=2)
+def reconstruct(batchX, predictedY, filelist):
+    result = np.concatenate((batchX, predictedY), axis=2)
     result = cv2.cvtColor(result, cv2.COLOR_Lab2BGR)
-    save_path = os.path.join(config.OUT_DIR, "ChromaGAN_results/"+ filelist[i][:-4] +  "Epoch%dreconstructed.jpg" % epoch)
+    save_models_path = os.path.join(config.OUT_DIR,config.TEST_NAME)
+    save_path = os.path.join(save_models_path, filelist +  "_reconstructed.jpg" )
     cv2.imwrite(save_path, result)
     return result
 
-def reconstruct_no(batchX, predictedY, filelist, epoch, i):
-    result = np.concatenate((batchX[i], predictedY[i]), axis=2)
+def reconstruct_no(batchX, predictedY):
+    result = np.concatenate((batchX, predictedY), axis=2)
     result = cv2.cvtColor(result, cv2.COLOR_Lab2BGR)
     return result
 
@@ -62,25 +60,15 @@ def wasserstein_loss(y_true, y_pred):
 def gradient_penalty_loss(y_true, y_pred, averaged_samples,
                           gradient_penalty_weight):
     gradients = K.gradients(y_pred, averaged_samples)[0]
-    # compute the euclidean norm by squaring ...
     gradients_sqr = K.square(gradients)
-    #   ... summing over the rows ...
     gradients_sqr_sum = K.sum(gradients_sqr,
                               axis=np.arange(1, len(gradients_sqr.shape)))
-    #   ... and sqrt
     gradient_l2_norm = K.sqrt(gradients_sqr_sum)
-    # compute lambda * (1 - ||grad||)^2 still for each single sample
     gradient_penalty = gradient_penalty_weight * K.square(1 - gradient_l2_norm)
-    # return the mean as loss over all the batch samples
     return K.mean(gradient_penalty)
 
     
 class RandomWeightedAverage(_Merge):
-    """Takes a randomly-weighted average of two tensors. In geometric terms, this
-    outputs a random point on the line between each pair of input points.
-    Inheriting from _Merge is a little messy but it was the quickest solution I could
-    think of. Improvements appreciated."""
-
     def _merge_function(self, inputs):
         weights = K.random_uniform((config.BATCH_SIZE, 1, 1, 1))
         return (weights * inputs[0]) + ((1 - weights) * inputs[1])
@@ -103,8 +91,6 @@ class MODEL():
         self.colorizationModel.compile(loss=['mse', 'kld'],
             optimizer=optimizer)
 
-
-
         img_Lab = Input(shape= self.img_shape_3)
         img_L = Input(shape= self.img_shape_1)
         batchX = Input(shape= self.img_shape_3)
@@ -121,14 +107,10 @@ class MODEL():
         averaged_samples_out = self.discriminator([averaged_samples, img_L])
 
 
-# The gradient penalty loss function requires the input averaged samples to get
-# gradients. However, Keras loss functions can only have two arguments, y_true and
-# y_pred. We get around this by making a partial() of the function with the averaged
-        # samples here.
         partial_gp_loss = partial(gradient_penalty_loss,
                           averaged_samples=averaged_samples,
                           gradient_penalty_weight=GRADIENT_PENALTY_WEIGHT)
-# Functions need names or Keras will throw an error
+
         partial_gp_loss.__name__ = 'gradient_penalty'
 
 
@@ -158,8 +140,7 @@ class MODEL():
         self.callback = TensorBoard(self.log_path)
         self.callback.set_model(self.combined)
         self.train_names = ['loss', 'mse_loss', 'kullback_loss', 'wasserstein_loss']
-        self.val_names = ['val_loss', 'val_mae']
-
+        self.disc_names = ['disc_loss', 'disc_valid', 'disc_fake','disc_gp']
 
 
         self.test_loss_array = []
@@ -256,7 +237,6 @@ class MODEL():
         return final_model
 
 
-
     def train(self, data, log,sample_interval=1):
         VGG_modelF = applications.vgg16.VGG16(weights='imagenet', include_top=True) # none, 1000
         positive_y = np.ones((config.BATCH_SIZE, 1), dtype=np.float32)
@@ -264,7 +244,7 @@ class MODEL():
         dummy_y = np.zeros((config.BATCH_SIZE, 1), dtype=np.float32)
         total_batch = int(data.size/config.BATCH_SIZE)
         it = 0
-        save_models_path = os.path.join(config.OUT_DIR,config.TEST_NAME)
+        save_models_path = os.path.join(config.MODEL_DIR,config.TEST_NAME)
         if not os.path.exists(save_models_path):
                 os.makedirs(save_models_path)
         for epoch in range(config.NUM_EPOCHS):
@@ -277,88 +257,39 @@ class MODEL():
                     write_log(self.callback, self.train_names, g_loss_col, it)
                     it = it+1
                     d_loss_real = self.discriminator_model.train_on_batch([batchX, batchY, l_3], [positive_y, negative_y, dummy_y])
+                    write_log(self.callback, self.disc_names, d_loss_real, it)
                     if (batch+1)%1000 ==0: 
                         print("[Epoch %d] [Batch %d/%d] [loss: %08f]" %  ( epoch, batch,total_batch, g_loss_col[0]))
-                        save_path = os.path.join(save_models_path, "my_model_combined33Epoch%d_it%d.h5" % (epoch, it))
-                        self.combined.save(save_path)  # creates a HDF5 file 'my_model.h5'
-                        save_path = os.path.join(save_models_path, "my_model_colorization33Epoch%d_it%d.h5" % (epoch, it))
-                        self.colorizationModel.save(save_path)  # creates a HDF5 file 'my_model.h5'
-                        save_path = os.path.join(save_models_path, "my_model_discriminator33Epoch%d_it%d.h5" % (epoch, it))
-                        self.discriminator.save_weights(save_path)  # creates a HDF5 file 'my_model.h5'
-                        save_path = os.path.join(save_models_path, "my_model_combined33Epoch%d_it%dWeihts.h5" % (epoch, it))
-                        self.combined.save(save_path)  # creates a HDF5 file 'my_model.h5'
-                        save_path = os.path.join(save_models_path, "my_model_colorization33Epoch%d_it%dWeihts.h5" % (epoch, it))
-                        self.colorizationModel.save(save_path)  # creates a HDF5 file 'my_model.h5'
-                        save_path = os.path.join(save_models_path, "my_model_discriminator33Epoch%d_it%dWeihts.h5" % (epoch, it))
-                        self.discriminator.save_weights(save_path)  # creates a HDF5 file 'my_model.h5'
-
-                save_path = os.path.join(save_models_path, "my_model_combined33Epoch%d.h5" % epoch)
-                self.combined.save(save_path)  # creates a HDF5 file 'my_model.h5'
-                save_path = os.path.join(save_models_path, "my_model_colorization33Epoch%d.h5" % epoch)
-                self.colorizationModel.save(save_path)  # creates a HDF5 file 'my_model.h5'
-                save_path = os.path.join(save_models_path, "my_model_discriminator33Epoch%d.h5" % epoch)
-                self.discriminator.save(save_path)  # creates a HDF5 file 'my_model.h5'
-
-                save_path = os.path.join(save_models_path, "my_model_combined33Epoch%dWeihts.h5" % epoch)
-                self.combined.save_weights(save_path)  # creates a HDF5 file 'my_model.h5'
-                save_path = os.path.join(save_models_path, "my_model_colorization33Epoch%dWeihts.h5" % epoch)
-                self.colorizationModel.save_weights(save_path)  # creates a HDF5 file 'my_model.h5'
-                save_path = os.path.join(save_models_path, "my_model_discriminator33Epoch%dWeihts.h5" % epoch)
-                self.discriminator.save_weights(save_path)  # creates a HDF5 file 'my_model.h5'
-                #self.sample_images(epoch, batch)
+                        save_path = os.path.join(save_models_path, "my_model_combinedEpoch%d_it%d.h5" % (epoch, it))
+                        self.combined.save(save_path)  
+                        save_path = os.path.join(save_models_path, "my_model_colorizationEpoch%d_it%d.h5" % (epoch, it))
+                        self.colorizationModel.save(save_path)  
+                        save_path = os.path.join(save_models_path, "my_model_discriminatorEpoch%d_it%d.h5" % (epoch, it))
+                        self.discriminator.save_weights(save_path) 
+                save_path = os.path.join(save_models_path, "my_model_combinedEpoch%d.h5" % epoch)
+                self.combined.save(save_path) 
+                save_path = os.path.join(save_models_path, "my_model_colorizationEpoch%d.h5" % epoch)
+                self.colorizationModel.save(save_path) 
+                save_path = os.path.join(save_models_path, "my_model_discriminatorEpoch%d.h5" % epoch)
+                self.discriminator.save(save_path)  
+                self.sample_images()
 
 
-    def sample_images(self, epoch):
-        VGG_modelF = applications.vgg16.VGG16(weights='imagenet', include_top=True) # none, 1000
-        r, c = 3, 1
-        avg_cost = 0
-        avg_cost2 = 0
-        avg_cost3 = 0
-        avg_ssim = 0
-        avg_psnr = 0
-        save_path = os.path.join(config.OUT_DIR, "test33_final/my_model_colorization33Epoch2Weihts.h5")
-        self.colorizationModel.load_weights(save_path)
-        test_data = data.DATA(config.TEST_DIR)
-        total_batch = int(test_data.size/config.BATCH_SIZE)
-        print(test_data.size)
-        print(total_batch)
-        it = 0
+    def sample_images(self):
         for _ in range(total_batch):
                 batchX, batchY,  filelist  = test_data.generate_batch()
                 predY, _  = self.colorizationModel.predict(np.tile(batchX,[1,1,1,3]))
                 predictVGG =VGG_modelF.predict(np.tile(batchX,[1,1,1,3]))
-                loss = self.colorizationModel.evaluate(np.tile(batchX,[1,1,1,3]), [batchY, predictVGG], verbose=0)
-                avg_cost += loss[0]/total_batch
-                avg_cost2 += loss[1]/total_batch
-                avg_cost3 += loss[2]/total_batch
                 for i in range(config.BATCH_SIZE):
-                    predResult = reconstruct(deprocess(batchX), deprocess(predY), filelist, epoch, i)
-                    originalResult = reconstruct_no(deprocess(batchX), deprocess(batchY), filelist, 1000, i)
-                    avg_ssim += tf.keras.backend.eval( tf.image.ssim(tf.convert_to_tensor(originalResult, dtype=tf.float32), tf.convert_to_tensor(predResult, dtype=tf.float32), max_val=255))/test_data.size 
-                    avg_psnr += tf.keras.backend.eval( tf.image.psnr(tf.convert_to_tensor(originalResult, dtype=tf.float32), tf.convert_to_tensor(predResult, dtype=tf.float32), max_val=255))/test_data.size
-             #   self.test_loss_array.append(loss[1])  
-                    it = it+1
-                    if it%50 ==0: 
-
-                        print(it)
-                        print(" ----------  loss =", "{:.8f}------------------".format(avg_cost))
-                        print(" ----------  upsamplingloss =", "{:.8f}------------------".format(avg_cost2))
-                        print(" ----------  classification_loss =", "{:.8f}------------------".format(avg_cost3))
-                        print(" ----------  ssim loss =", "{:.8f}------------------".format(avg_ssim))
-                        print(" ----------  psnr loss =", "{:.8f}------------------".format(avg_psnr))
-
-        print(" ----------  loss =", "{:.8f}------------------".format(avg_cost))
-        print(" ----------  upsamplingloss =", "{:.8f}------------------".format(avg_cost2))
-        print(" ----------  classification_loss =", "{:.8f}------------------".format(avg_cost3))
-        print(" ----------  ssim loss =", "{:.8f}------------------".format(avg_ssim))
-        print(" ----------  psnr loss =", "{:.8f}------------------".format(avg_psnr))
+                        predResult = reconstruct(deprocess(batchX)[i], deprocess(predY)[i], filelist[i][:-4] )
 
 
 
 if __name__ == '__main__':
-    if not os.path.exists(config.LOG_DIR):
-        os.makedirs(config.LOG_DIR)
-    with open(os.path.join(config.LOG_DIR, str(datetime.datetime.now().strftime("%Y%m%d")) + "_" + str(config.BATCH_SIZE) + "_" + str(config.NUM_EPOCHS) + ".txt"), "w") as log:
+    log_path= os.path.join(config.LOG_DIR,config.TEST_NAME)
+    if not os.path.exists(log_path):
+        os.makedirs(log_path)
+    with open(os.path.join(log_path, str(datetime.datetime.now().strftime("%Y%m%d")) + "_" + str(config.BATCH_SIZE) + "_" + str(config.NUM_EPOCHS) + ".txt"), "w") as log:
         log.write(str(datetime.datetime.now()) + "\n")
         log.write("Use Pretrained Weights: " + str(config.USE_PRETRAINED) + "\n")
         print("Use Pretrained Weights"  + str(config.USE_PRETRAINED))
