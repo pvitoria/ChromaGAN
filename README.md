@@ -35,6 +35,8 @@ pip install -r requirements.txt
 
 ### Download the dataset
 Download dataset and place it in the `/DATASET/` folder.
+We have train our model with ImageNet dataset.
+You can download it from <a href="http://image-net.org/download"> here </a> 
 
 
 ### Network Parameters
