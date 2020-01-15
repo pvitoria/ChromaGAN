@@ -79,7 +79,7 @@ Models are saved to `./MODELS/DATASET/TEST_NAME/`
 To test the network:
 ```
 cd ChromaGAN/SOURCE/
-python ChromaGANprint.py
+python ChromaGANPrint.py
 ```
 Images are saved to `./RESULT/DATASET/TEST_NAME/` 
 
