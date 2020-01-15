@@ -297,10 +297,10 @@ class MODEL():
                 self.discriminator.save(save_path) 
                 
                 # sample images after each epoch
-                self.sample_images()
+                self.sample_images(total_batch)
 
 
-    def sample_images(self):
+    def sample_images(self, total_batch):
         
         for _ in range(total_batch):
                 # load test data
