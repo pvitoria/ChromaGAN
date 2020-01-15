@@ -64,7 +64,7 @@ BATCH_SIZE = 10
 
 # TRAINING INFORMATION
 USE_PRETRAINED = False
-PRETRAINED = "my_model_colorizationEpoch4.h5" # modify, notice that epoch goes from 0 to N-1
+PRETRAINED = "my_model_colorizationEpoch4.h5" # modify, notice that epoch goes from 0 to NUM_EPOCHS-1
 NUM_EPOCHS = 5
   ```
 
