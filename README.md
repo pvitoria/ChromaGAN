@@ -41,7 +41,7 @@ You can download it from <a href="http://image-net.org/download"> here </a>
 
 ### Network Parameters
 All the parameters can be modified from the `config.py` file. 
-Note: Modify the name of the dataset in the config file in `DATASET`. For each test you can modify the folder name in `TEST_NAME`.
+Note: Modify the name of the dataset in the config file in `DATASET`. For each test you can modify the folder name in `TEST_NAME`. The variable PRETRAINED should be changed by the name of your pretrained colorization file.
 ```
 import os
 
@@ -64,7 +64,7 @@ BATCH_SIZE = 10
 
 # TRAINING INFORMATION
 USE_PRETRAINED = False
-PRETRAINED = "_.h5"
+PRETRAINED = "my_model_colorizationEpoch4.h5"
 NUM_EPOCHS = 5
   ```
 
