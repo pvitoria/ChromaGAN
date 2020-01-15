@@ -62,7 +62,7 @@ def sample_images():
             avg_cost += loss[0]
             avg_cost2 += loss[1]
             avg_cost3 += loss[2]
-            for i in range(config.BATCH_SIZE):
+            for i in range(min(config.BATCH_SIZE,test_data.size)):
                 predResult = reconstruct(deprocess(batchX)[i], deprocess(predY)[i], filelist[i][:-4] )
                 originalResult = reconstruct_no(deprocess(batchX)[i], deprocess(batchY)[i])
                 avg_ssim += tf.keras.backend.eval( tf.image.ssim(tf.convert_to_tensor(originalResult, dtype=tf.float32), tf.convert_to_tensor(predResult, dtype=tf.float32), max_val=255))
