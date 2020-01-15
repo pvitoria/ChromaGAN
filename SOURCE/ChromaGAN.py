@@ -264,7 +264,7 @@ class MODEL():
         dummy_y = np.zeros((config.BATCH_SIZE, 1), dtype=np.float32)
         
         # total number of batches in one epoch
-        total_batch = int(data.size/config.BATCH_SIZE)
+        total_batch = max(data.size,int(data.size/config.BATCH_SIZE))
 
         for epoch in range(config.NUM_EPOCHS):
                 for batch in range(total_batch):
