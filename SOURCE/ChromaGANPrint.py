@@ -72,8 +72,8 @@ def sample_images():
     print(" ----------  loss =", "{:.8f}------------------".format(avg_cost/total_batch))
     print(" ----------  upsamplingloss =", "{:.8f}------------------".format(avg_cost2/total_batch))
     print(" ----------  classification_loss =", "{:.8f}------------------".format(avg_cost3/total_batch))
-    print(" ----------  ssim loss =", "{:.8f}------------------".format(avg_ssim/(total_batch*config.BATCH_SIZE)))
-    print(" ----------  psnr loss =", "{:.8f}------------------".format(avg_psnr/(total_batch*config.BATCH_SIZE)))
+    print(" ----------  ssim loss =", "{:.8f}------------------".format(avg_ssim/(total_batch*min(config.BATCH_SIZE,test_data.size))))
+    print(" ----------  psnr loss =", "{:.8f}------------------".format(avg_psnr/(total_batch*min(config.BATCH_SIZE,test_data.size))))
 
 
 
