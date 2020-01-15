@@ -46,7 +46,7 @@ Note: Modify the name of the dataset in the config file in `DATASET`. For each t
 import os
 
 # DIRECTORY INFORMATION
-DATASET = "_"
+DATASET = "imagenet" # modify
 TEST_NAME ="_"
 ROOT_DIR = os.path.abspath('../')
 DATA_DIR = os.path.join(ROOT_DIR, 'DATASET/'+DATASET+'/')
