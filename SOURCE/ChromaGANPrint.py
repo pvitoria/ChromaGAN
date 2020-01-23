@@ -62,7 +62,7 @@ def sample_images():
             avg_cost += loss[0]
             avg_cost2 += loss[1]
             avg_cost3 += loss[2]
-            for i in range(min(config.BATCH_SIZE,test_data.size)):
+            for i in range(config.BATCH_SIZE):
                 predResult = reconstruct(deprocess(batchX)[i], deprocess(predY)[i], filelist[i][:-4] )
                 originalResult = reconstruct_no(deprocess(batchX)[i], deprocess(batchY)[i])
                 avg_ssim += tf.keras.backend.eval( tf.image.ssim(tf.convert_to_tensor(originalResult, dtype=tf.float32), tf.convert_to_tensor(predResult, dtype=tf.float32), max_val=255))
@@ -72,8 +72,8 @@ def sample_images():
     print(" ----------  loss =", "{:.8f}------------------".format(avg_cost/total_batch))
     print(" ----------  upsamplingloss =", "{:.8f}------------------".format(avg_cost2/total_batch))
     print(" ----------  classification_loss =", "{:.8f}------------------".format(avg_cost3/total_batch))
-    print(" ----------  ssim loss =", "{:.8f}------------------".format(avg_ssim/(total_batch*min(config.BATCH_SIZE,test_data.size))))
-    print(" ----------  psnr loss =", "{:.8f}------------------".format(avg_psnr/(total_batch*min(config.BATCH_SIZE,test_data.size))))
+    print(" ----------  ssim loss =", "{:.8f}------------------".format(avg_ssim/(total_batch*config.BATCH_SIZE)))
+    print(" ----------  psnr loss =", "{:.8f}------------------".format(avg_psnr/(total_batch*config.BATCH_SIZE)))
 
 
 
