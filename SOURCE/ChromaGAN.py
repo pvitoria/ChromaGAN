@@ -297,14 +297,15 @@ class MODEL():
                 self.discriminator.save(save_path) 
                 
                 # sample images after each epoch
-                self.sample_images(total_batch)
+                self.sample_images(train_data)
 
 
-    def sample_images(self, total_batch):
+    def sample_images(self, train_data):
         
+        total_batch = max(train_data.size,int(train_data.size/config.BATCH_SIZE))
         for _ in range(total_batch):
                 # load test data
-                testL, _ ,  filelist  = test_data.generate_batch()
+                testL, _ ,  filelist  = train_data.generate_batch()
                 
                 # predict AB channels
                 predAB, _  = self.colorizationModel.predict(np.tile(testL,[1,1,1,3]))
@@ -327,6 +328,7 @@ if __name__ == '__main__':
 
         print('load training data from'+ config.TRAIN_DIR)
         train_data = data.DATA(config.TRAIN_DIR)
+        assert config.BATCH_SIZE<=train_data.size, "The batch size should be smaller or equal to the number of training images --> modify it in config.py"
         print("Train data loaded")
         
         print("Initiliazing Model...")
