@@ -30,8 +30,10 @@ def deprocess(imgs):
 def reconstruct(batchX, predictedY, filelist):
     result = np.concatenate((batchX, predictedY), axis=2)
     result = cv2.cvtColor(result, cv2.COLOR_Lab2BGR)
-    save_models_path = os.path.join(config.OUT_DIR,config.TEST_NAME)
-    save_path = os.path.join(save_models_path, filelist +  "_reconstructed.jpg" )
+    save_results_path = os.path.join(config.OUT_DIR,config.TEST_NAME)
+    if not os.path.exists(save_results_path):
+        os.makedirs(save_results_path)
+    save_path = os.path.join(save_results_path, filelist +  "_reconstructed.jpg" )
     cv2.imwrite(save_path, result)
     return result
 
