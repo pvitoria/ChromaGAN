@@ -299,15 +299,15 @@ class MODEL():
                 self.discriminator.save(save_path) 
                 
                 # sample images after each epoch
-                self.sample_images(train_data)
+                #self.sample_images(train_data)
 
 
-    def sample_images(self, train_data):
+    def sample_images(self, data):
         
-        total_batch = max(train_data.size,int(train_data.size/config.BATCH_SIZE))
-        for _ in range(total_batch):
+        total_batch = max(data.size,int(data.size/config.BATCH_SIZE))
+        for _ in range(data):
                 # load test data
-                testL, _ ,  filelist  = train_data.generate_batch()
+                testL, _ ,  filelist  = data.generate_batch()
                 
                 # predict AB channels
                 predAB, _  = self.colorizationModel.predict(np.tile(testL,[1,1,1,3]))
