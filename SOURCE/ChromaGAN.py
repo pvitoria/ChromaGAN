@@ -250,7 +250,7 @@ class MODEL():
         return final_model
 
 
-    def train(self, data, log,sample_interval=1):
+    def train(self, data,test_data, log,sample_interval=1):
         
         # Create folder to save models if needed.
         save_models_path =os.path.join(config.MODEL_DIR,config.TEST_NAME)
@@ -299,15 +299,14 @@ class MODEL():
                 self.discriminator.save(save_path) 
                 
                 # sample images after each epoch
-                #self.sample_images(train_data)
+                self.sample_images(test_data)
 
 
-    def sample_images(self, data):
-        
-        total_batch = max(data.size,int(data.size/config.BATCH_SIZE))
-        for _ in range(data):
+    def sample_images(self,test_data):
+        total_batch = max(test_data.size,int(test_data.size/config.BATCH_SIZE))
+        for _ in range(test_data):
                 # load test data
-                testL, _ ,  filelist  = data.generate_batch()
+                testL, _ ,  filelist  = test_data.generate_batch()
                 
                 # predict AB channels
                 predAB, _  = self.colorizationModel.predict(np.tile(testL,[1,1,1,3]))
@@ -330,6 +329,7 @@ if __name__ == '__main__':
 
         print('load training data from '+ config.TRAIN_DIR)
         train_data = data.DATA(config.TRAIN_DIR)
+        test_data = data.DATA(config.TEST_DIR)
         assert config.BATCH_SIZE<=train_data.size, "The batch size should be smaller or equal to the number of training images --> modify it in config.py"
         print("Train data loaded")
         
@@ -338,4 +338,4 @@ if __name__ == '__main__':
         print("Model Initialized!")
         
         print("Start training")
-        colorizationModel.train(train_data, log)
+        colorizationModel.train(train_data,test_data, log)
