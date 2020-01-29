@@ -266,7 +266,7 @@ class MODEL():
         dummy_y = np.zeros((config.BATCH_SIZE, 1), dtype=np.float32)
         
         # total number of batches in one epoch
-        total_batch = max(data.size,int(data.size/config.BATCH_SIZE))
+        total_batch = int(data.size/config.BATCH_SIZE)
 
         for epoch in range(config.NUM_EPOCHS):
                 for batch in range(total_batch):
@@ -303,7 +303,7 @@ class MODEL():
 
 
     def sample_images(self,test_data):
-        total_batch = max(test_data.size,int(test_data.size/config.BATCH_SIZE))
+        total_batch = int(test_data.size/config.BATCH_SIZE)
         for _ in range(test_data):
                 # load test data
                 testL, _ ,  filelist  = test_data.generate_batch()
