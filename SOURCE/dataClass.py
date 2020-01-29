@@ -29,6 +29,8 @@ class DATA():
     def read_img(self, filename):
         img = cv2.imread(filename, 3)
         height, width, channels = img.shape
+        min_hw = int(min(height,width)/2)
+        img = img[int(height/2)-min_hw:int(height/2)+min_hw,int(width/2)-min_hw:int(width/2)+min_hw,:]
         labimg = cv2.cvtColor(cv2.resize(img, (config.IMAGE_SIZE, config.IMAGE_SIZE)), cv2.COLOR_BGR2Lab)
         return np.reshape(labimg[:,:,0], (config.IMAGE_SIZE, config.IMAGE_SIZE, 1)), labimg[:, :, 1:]
 
