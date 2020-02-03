@@ -64,7 +64,7 @@ BATCH_SIZE = 10
 
 # TRAINING INFORMATION
 USE_PRETRAINED = False
-PRETRAINED = "my_model_colorizationEpoch4.h5" # modify, notice that epoch goes from 0 to NUM_EPOCHS-1
+PRETRAINED = "my_model_colorization.h5" 
 NUM_EPOCHS = 5
   ```
 
@@ -75,6 +75,9 @@ cd ChromaGAN/SOURCE/
 python ChromaGAN.py
   ```
 Models are saved to `./MODELS/DATASET/TEST_NAME/` 
+
+
+
   ### Testing
 To test the network:
 ```
@@ -83,7 +86,10 @@ python ChromaGANPrint.py
 ```
 Images are saved to `./RESULT/DATASET/TEST_NAME/` 
 
-Note: Pretrained models will be provided soon.
+## Pretrained Weights
+
+You can donwload the pretrained weights from <a href=https://drive.google.com/open?id=12s4rbLmnjW4e8MmESbfRStGbrjOrahlW> here </a>.
+In order to test the network you should use the file called ` my_model_colorization.h5. 
     
 ## Citation
 If you use this code for your research, please cite our paper <a href="https://arxiv.org/pdf/1907.09837.pdf"> ChromaGAN: An Adversarial Approach for Picture Colorization</a>:
