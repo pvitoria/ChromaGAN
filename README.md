@@ -88,7 +88,7 @@ Images are saved to `./RESULT/DATASET/TEST_NAME/`
 
 ## Pretrained Weights
 
-You can donwload the pretrained weights from [<a href="https://drive.google.com/open?id=12s4rbLmnjW4e8MmESbfRStGbrjOrahlW">here</a>].
+You can donwload the pretrained weights from <a href="https://drive.google.com/open?id=12s4rbLmnjW4e8MmESbfRStGbrjOrahlW">here</a>.
 In order to test the network you should use the file called ` my_model_colorization.h5. 
     
 ## Citation
