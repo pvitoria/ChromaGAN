@@ -53,6 +53,7 @@ def sample_images():
     save_path = os.path.join(save_models_path, config.PRETRAINED)
     colorizationModel = load_model(save_path)
     test_data = data.DATA(config.TEST_DIR)
+    assert config.BATCH_SIZE<=test_data.size, "The batch size should be smaller or equal to the number of testing images --> modify it in config.py"
     total_batch = int(test_data.size/config.BATCH_SIZE)
     print("number of images to inpaint " + str(test_data.size))
     print("total number of batches to colorize " + str(total_batch))
