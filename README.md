@@ -63,7 +63,6 @@ BATCH_SIZE = 10
 
 
 # TRAINING INFORMATION
-USE_PRETRAINED = False
 PRETRAINED = "my_model_colorization.h5" 
 NUM_EPOCHS = 5
   ```
