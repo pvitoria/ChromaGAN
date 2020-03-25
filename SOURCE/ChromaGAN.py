@@ -304,7 +304,7 @@ class MODEL():
 
     def sample_images(self,test_data):
         total_batch = int(test_data.size/config.BATCH_SIZE)
-        for _ in range(test_data):
+        for _ in range(total_batch):
                 # load test data
                 testL, _ ,  filelist  = test_data.generate_batch()
                 
