@@ -39,7 +39,7 @@ class DATA():
         labels = []
         filelist = []
         for i in range(self.batch_size):
-            filename = os.path.join(config.DATA_DIR, self.dir_path, self.filelist[self.data_index])
+            filename = os.path.join(self.dir_path, self.filelist[self.data_index])
             filelist.append(self.filelist[self.data_index])
             greyimg, colorimg = self.read_img(filename)
             batch.append(greyimg)
