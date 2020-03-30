@@ -186,12 +186,6 @@ class MODEL():
         
         input_img = Input(shape=self.img_shape_3)
 
-        # VGG16 Full
-        VGG_modelF = applications.vgg16.VGG16(weights='imagenet', include_top=True) # none, 1000
-        for layer in VGG_modelF.layers:
-            layer.trainable = False
-        model_ = Model(VGG_modelF.input,VGG_modelF.output)
-        VGG_modelFull = model_(input_img)
 
         # VGG16 without top layers
         VGG_model = applications.vgg16.VGG16(weights='imagenet', include_top=False, input_shape=(224, 224, 3))
