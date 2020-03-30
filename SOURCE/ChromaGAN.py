@@ -117,7 +117,7 @@ class MODEL():
         img_ab_real = Input(shape= self.img_shape_2)
 
         self.colorizationModel.trainable = False
-        predAB, substracted = self.colorizationModel(img_L_3)
+        predAB, classVector = self.colorizationModel(img_L_3)
         discPredAB = self.discriminator([predAB, img_L])
         discriminator_output_from_real_samples = self.discriminator([img_ab_real, img_L])
 
@@ -146,7 +146,7 @@ class MODEL():
         self.colorizationModel.trainable = True
         self.discriminator.trainable = False
         self.combined = Model(inputs=[img_L_3, img_L],
-                              outputs=[ predAB, substracted, discPredAB])
+                              outputs=[ predAB, classVector, discPredAB])
         self.combined.compile(loss=['mse','kld', wasserstein_loss],
                             loss_weights=[1.0, 0.003, -0.1],
                             optimizer=optimizer) #1/300
