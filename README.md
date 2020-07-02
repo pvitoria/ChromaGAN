@@ -78,7 +78,7 @@ Models are saved to `./MODELS/DATASET/TEST_NAME/`
 
 
   ### Testing
-To test the network you can either run the code directly from Colab using our  [<a href="DemoChromaGAN_final.ipynb">Demo</a>] or run the code as follows :
+To test the network you can either run the code directly from Colab using our  <a href="DemoChromaGAN_final.ipynb">Demo</a> or run the code as follows :
 ```
 cd ChromaGAN/SOURCE/
 python ChromaGANPrint.py
