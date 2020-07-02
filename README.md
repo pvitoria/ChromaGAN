@@ -1,5 +1,5 @@
 # ChromaGAN
-Official Keras Implementation of ChromaGAN: An Adversarial Approach for Picture Colorization [<a href="https://colab.research.google.com/github/pvitoria/ChromaGAN/blob/master/DemoChromaGAN_final.ipynb">DEMO</a>] [<a href="https://arxiv.org/pdf/1907.09837.pdf">arXiv</a>]
+Official Keras Implementation of ChromaGAN: Adversarial Picture Colorization with Semantic Class Distribution [<a href="https://colab.research.google.com/github/pvitoria/ChromaGAN/blob/master/DemoChromaGAN_final.ipynb">DEMO</a>][<a href="https://openaccess.thecvf.com/content_WACV_2020/html/Vitoria_ChromaGAN_Adversarial_Picture_Colorization_with_Semantic_Class_Distribution_WACV_2020_paper.html">WACV 2020</a>] [<a href="https://arxiv.org/pdf/1907.09837.pdf">arXiv</a>] 
 
 
 <p align="center">
