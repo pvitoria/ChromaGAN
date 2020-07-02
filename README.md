@@ -1,5 +1,5 @@
 # ChromaGAN
-Official Keras Implementation of ChromaGAN: An Adversarial Approach for Picture Colorization [<a href="DemoChromaGAN_final.ipynb">DEMO</a>] [<a href="https://arxiv.org/pdf/1907.09837.pdf">arXiv</a>]
+Official Keras Implementation of ChromaGAN: An Adversarial Approach for Picture Colorization [<a href="https://colab.research.google.com/github/pvitoria/ChromaGAN/blob/master/DemoChromaGAN_final.ipynb">DEMO</a>] [<a href="https://arxiv.org/pdf/1907.09837.pdf">arXiv</a>]
 
 
 <p align="center">
@@ -78,7 +78,7 @@ Models are saved to `./MODELS/DATASET/TEST_NAME/`
 
 
   ### Testing
-To test the network you can either run the code directly from Colab using our  <a href="DemoChromaGAN_final.ipynb">Demo</a> or run the code as follows :
+To test the network you can either run the code directly from Colab using our  <a href="https://colab.research.google.com/github/pvitoria/ChromaGAN/blob/master/DemoChromaGAN_final.ipynb">Demo</a> or run the code as follows :
 ```
 cd ChromaGAN/SOURCE/
 python ChromaGANPrint.py
