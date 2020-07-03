@@ -1,5 +1,5 @@
 # ChromaGAN
-Official Keras Implementation of ChromaGAN: Adversarial Picture Colorization with Semantic Class Distribution [<a href="https://colab.research.google.com/github/pvitoria/ChromaGAN/blob/master/DemoChromaGAN_final.ipynb">DEMO</a>][<a href="https://openaccess.thecvf.com/content_WACV_2020/html/Vitoria_ChromaGAN_Adversarial_Picture_Colorization_with_Semantic_Class_Distribution_WACV_2020_paper.html">WACV 2020</a>] [<a href="https://arxiv.org/pdf/1907.09837.pdf">arXiv</a>] 
+Official Keras Implementation of ChromaGAN: Adversarial Picture Colorization with Semantic Class Distribution [<a href="https://colab.research.google.com/github/pvitoria/ChromaGAN/blob/master/DemoChromaGAN.ipynb">DEMO</a>][<a href="https://openaccess.thecvf.com/content_WACV_2020/html/Vitoria_ChromaGAN_Adversarial_Picture_Colorization_with_Semantic_Class_Distribution_WACV_2020_paper.html">WACV 2020</a>] [<a href="https://arxiv.org/pdf/1907.09837.pdf">arXiv</a>] 
 
 
 <p align="center">
@@ -78,7 +78,7 @@ Models are saved to `./MODELS/DATASET/TEST_NAME/`
 
 
   ### Testing
-To test the network you can either run the code directly from Colab using our  <a href="https://colab.research.google.com/github/pvitoria/ChromaGAN/blob/master/DemoChromaGAN_final.ipynb">Demo</a> or run the code as follows :
+To test the network you can either run the code directly from Colab using our  <a href="http://gpi.upf.edu/chromagan/my_model_colorization.h5">Demo</a> or run the code as follows :
 ```
 cd ChromaGAN/SOURCE/
 python ChromaGANPrint.py
