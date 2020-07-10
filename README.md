@@ -3,8 +3,19 @@ Official Keras Implementation of ChromaGAN: Adversarial Picture Colorization wit
 
 
 <p align="center">
-  <img width="600" src="Figures/Results.png?raw=true">
+  <img height="600" src="Figures/27.31452560_ILSVRC2012_val_00000186._reconstructed.jpg?raw=true">
+<img height="600" src="Figures/10.23894882_ILSVRC2012_val_00000680._reconstructed.jpg?raw=true">
+<img height="280" src="Figures/22.09770966_ILSVRC2012_val_00001042._reconstructed.jpg?raw=true">
+<img height="280" src="Figures/23.27637291_ILSVRC2012_val_00000023._reconstructed.jpg?raw=true">
+<img height="280" src="Figures/26.34756279_ILSVRC2012_val_00000796._reconstructed.jpg?raw=true">
+<img height="280" src="Figures/27.84384155_ILSVRC2012_val_00000013._reconstructed.jpg?raw=true">
+<img height="280" src="Figures/28.33658218_ILSVRC2012_val_00049397._reconstructed.jpg?raw=true">
+<img height="280" src="Figures/28.42907333_ILSVRC2012_val_00001398._reconstructed.jpg?raw=true">
+<img height="280" src="Figures/31.34938049_ILSVRC2012_val_00000211._reconstructed.jpg?raw=true">
+<img height="280" src="Figures/8.27914047_ILSVRC2012_val_00000915._reconstructed.jpg?raw=true">
 </p>
+
+
 
 
 ## Network Architecture
