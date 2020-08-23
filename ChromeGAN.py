@@ -82,6 +82,19 @@ def reconstruct(batchX, predictedY):
     return result
 
 
+def reconstruct_each_img(batch_size, batch_info, pred_y):
+    batch_x, batch_y, file_list, original, labimg_orit_list = batch_info
+    for i in range(batch_size):
+        original_result = original[i]
+        height, width, channels = original_result.shape
+        pred_y_2 = deprocess(pred_y[i])
+        pred_y_2 = cv2.resize(pred_y_2, (width, height))
+        labimg_orit_list_2 = labimg_orit_list[i]
+        pred_result_2 = reconstruct(deprocess(labimg_orit_list_2), pred_y_2)
+        save_path = os.path.join(args.output_dir, file_list[i][:-4] + "_reconstructed.jpg")
+        cv2.imwrite(save_path, pred_result_2)
+
+
 def colorize():
     save_path = os.path.join(args.model)
     colorization_model = load_model(save_path)
@@ -96,22 +109,12 @@ def colorize():
     if not os.path.exists(args.output_dir):
         print('created save result path')
         os.makedirs(args.output_dir)
-    for b in tqdm(range(total_batch)):
-        batch_x, batch_y, file_list, original, labimg_orit_list = test_data.generate_batch()
+    for _ in tqdm(range(total_batch)):
+        batch_info = test_data.generate_batch()
+        batch_x = batch_info[0]
         if batch_x.any():
             pred_y, _ = colorization_model.predict(np.tile(batch_x, [1, 1, 1, 3]), use_multiprocessing=True)
-            for i in range(args.batch_size):
-                original_result = original[i]
-                height, width, channels = original_result.shape
-                pred_y_2 = deprocess(pred_y[i])
-                pred_y_2 = cv2.resize(pred_y_2, (width, height))
-                labimg_orit_list_2 = labimg_orit_list[i]
-                pred_result_2 = reconstruct(deprocess(labimg_orit_list_2), pred_y_2)
-                psnr = tf.keras.backend.eval(tf.image.psnr(tf.convert_to_tensor(original_result, dtype=tf.float32), tf.convert_to_tensor(pred_result_2, dtype=tf.float32), max_val=255))
-                save_path = os.path.join(args.output_dir, "{:.8f}_".format(psnr) + file_list[i][:-4] + "_reconstructed.jpg")
-                cv2.imwrite(save_path, pred_result_2)
-                print("\nImage " + str(i + 1) + "/" + str(args.batch_size) + " in batch " + str(b + 1) + "/" + str(
-                    total_batch) + ". From left to right: grayscale image to colorize, colorized image ( PSNR =", "{:.8f}".format(psnr), ")and ground truth image.")
+            reconstruct_each_img(args.batch_size, batch_info, pred_y)
 
 
 colorize()
