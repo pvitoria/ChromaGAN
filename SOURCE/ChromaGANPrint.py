@@ -70,7 +70,7 @@ def sample_images():
             avg_cost3 += loss[2]
             for i in range(config.BATCH_SIZE):
                 originalResult_red = reconstruct_no(deprocess(batchX)[i], deprocess(batchY)[i])
-                predResult_red = reconstruct(deprocess(batchX)[i], deprocess(predY)[i], filelist[i][:-4] )
+                predResult_red = reconstruct_no(deprocess(batchX)[i], deprocess(predY)[i])
                 ssim= tf.keras.backend.eval( tf.image.ssim(tf.convert_to_tensor(originalResult_red, dtype=tf.float32), tf.convert_to_tensor(predResult_red, dtype=tf.float32), max_val=255))
                 psnr= tf.keras.backend.eval( tf.image.psnr(tf.convert_to_tensor(originalResult_red, dtype=tf.float32), tf.convert_to_tensor(predResult_red, dtype=tf.float32), max_val=255))
                 avg_ssim += ssim
