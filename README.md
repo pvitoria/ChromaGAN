@@ -2,6 +2,7 @@
 Official Keras Implementation of ChromaGAN: Adversarial Picture Colorization with Semantic Class Distribution [<a href="https://openaccess.thecvf.com/content_WACV_2020/html/Vitoria_ChromaGAN_Adversarial_Picture_Colorization_with_Semantic_Class_Distribution_WACV_2020_paper.html">WACV 2020</a>] [<a href="https://arxiv.org/pdf/1907.09837.pdf">arXiv</a>] [<a href="https://www.upf.edu/documents/217835968/237801780/WACV_supplementary/5fece9e0-d835-3115-1c17-20a1c513e9d5">Supplementary Material</a>] 
 
 
+
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pvitoria/ChromaGAN/blob/master/DemoChromaGAN.ipynb)
 
 <p align="center">
