@@ -1,0 +1,30 @@
+FROM python:3.7-buster
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && \
+        apt-get install -y \
+        libsm6 \
+        libxext6 \
+        libxrender1
+
+RUN pip install gdown
+RUN gdown -O /tmp/my_model_colorization.h5 'https://drive.google.com/uc?id=12hyrk6A3bcpAFIBNW0sfeEevJ9daUTGr'
+
+RUN pip install \
+        opencv-python==4.1.0.25 \
+        numpy==1.15.4 \
+        tensorflow==1.13.1 \
+        keras==2.2.4 \
+        h5py==2.10.0
+
+RUN mkdir -p /code/MODEL/imagenet && mv /tmp/my_model_colorization.h5 /code/MODEL/imagenet/modelPretrained.h5
+
+# pre-cache vgg16
+RUN python -c "from keras import applications; applications.vgg16.VGG16(weights='imagenet', include_top=True)"
+
+COPY . /code
+WORKDIR /code/SOURCE
+RUN sed -i "s/BATCH_SIZE = 10/BATCH_SIZE = 1/" config.py
+
+ENTRYPOINT ["python", "ChromaGANPrint.py", "--no-concatenate"]
