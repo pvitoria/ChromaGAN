@@ -104,9 +104,7 @@ Images are saved to `./RESULT/DATASET/TEST_NAME/`
 You can donwload the pretrained weights from <a href="https://drive.google.com/drive/folders/12s4rbLmnjW4e8MmESbfRStGbrjOrahlW?usp=sharing">here</a>.
 In order to test the network you should use the file called ` my_model_colorization.h5. 
     
-## Run inferences using Docker
 
-You can colorize arbitrary grayscale images using a pre-packaged Docker image from the Replicate registry: https://beta.replicate.ai/pvitoria/ChromaGAN
 
 ## Citation
 If you use this code for your research, please cite our paper <a href="https://arxiv.org/pdf/1907.09837.pdf"> ChromaGAN: An Adversarial Approach for Picture Colorization</a>:
@@ -123,3 +121,15 @@ If you use this code for your research, please cite our paper <a href="https://a
 ## Aknowledgments 
 
 The authors acknowledge partial support by MICINN/FEDER UE project, reference PGC2018-098625-B-I00 VAGS, and by H2020-MSCA-RISE-2017 project, reference 777826 NoMADS. We also thank the support of NVIDIA Corporation for the donation of GPUs used in this work.
+
+
+# Additional Resources
+## Run inferences using Docker
+
+You can colorize arbitrary grayscale images using a pre-packaged Docker image from the Replicate registry: https://beta.replicate.ai/pvitoria/ChromaGAN
+The docker has been made by  [<a href="https://github.com/andreasjansson">Andreas Jansson</a>]  Andreas Jansson.
+
+## Mentions in the Media
+
+ChromaGAN has been recomendeed as one of the "10 Data Science Projects Every Beginner should add to their Portfolio". [<a href=https://www.analyticsvidhya.com/blog/2020/12/10-data-science-projects-for-beginners/>Link</a>] 
+
