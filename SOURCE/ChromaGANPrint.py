@@ -11,6 +11,8 @@
 #You should have received a copy of the GNU Affero General Public License
 #along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+import sys
+import argparse
 import os
 import tensorflow as tf
 import config as config
@@ -43,7 +45,7 @@ def reconstruct_no(batchX, predictedY):
     return result
 
 
-def sample_images():
+def sample_images(concatenate=True):
     avg_cost = 0
     avg_cost2 = 0
     avg_cost3 = 0
@@ -61,7 +63,11 @@ def sample_images():
     print("total number of batches to colorize " + str(total_batch))
     for b in range(total_batch):
             #batchX, batchY,  filelist  = test_data.generate_batch()
-            batchX, batchY,  filelist, original, labimg_oritList = test_data.generate_batch()
+            try:
+                batchX, batchY,  filelist, original, labimg_oritList = test_data.generate_batch()
+            except Exception as e:
+                sys.stderr.write("Failed to generate batch: {}\n".format(e))
+                continue
             predY, _  = colorizationModel.predict(np.tile(batchX,[1,1,1,3]))
             predictVGG =VGG_modelF.predict(np.tile(batchX,[1,1,1,3]))
             loss = colorizationModel.evaluate(np.tile(batchX,[1,1,1,3]), [batchY, predictVGG], verbose=0)
@@ -82,7 +88,12 @@ def sample_images():
                 labimg_ori =np.expand_dims(labimg_oritList[i],axis=2)
                 predResult= reconstruct_no(deprocess(labimg_ori), predictedAB)
                 save_path = os.path.join(config.OUT_DIR, "{:4.8f}_".format(psnr)+filelist[i][:-4] +"psnr_reconstructed.jpg" )
-                cv2.imwrite(save_path, np.concatenate((predResult, originalResult)))
+                if concatenate:
+                    result_img = np.concatenate((predResult, originalResult))
+                else:
+                    result_img = predResult
+                if not cv2.imwrite(save_path, result_img):
+                    print("Failed to save " + save_path)
                 print("Batch " + str(b)+"/"+str(total_batch))
                 print(psnr)
 
@@ -95,4 +106,7 @@ def sample_images():
 
 
 if __name__ == '__main__':
-    sample_images()
+    parser = argparse.ArgumentParser(description="ChromaGAN colorization")
+    parser.add_argument("--no-concatenate", action="store_true")
+    args = parser.parse_args()
+    sample_images(not args.no_concatenate)

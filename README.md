@@ -104,6 +104,10 @@ Images are saved to `./RESULT/DATASET/TEST_NAME/`
 You can donwload the pretrained weights from <a href="https://drive.google.com/drive/folders/12s4rbLmnjW4e8MmESbfRStGbrjOrahlW?usp=sharing">here</a>.
 In order to test the network you should use the file called ` my_model_colorization.h5. 
     
+## Run inferences using Docker
+
+You can colorize arbitrary grayscale images using a pre-packaged Docker image from the Replicate registry: https://beta.replicate.ai/pvitoria/ChromaGAN
+
 ## Citation
 If you use this code for your research, please cite our paper <a href="https://arxiv.org/pdf/1907.09837.pdf"> ChromaGAN: An Adversarial Approach for Picture Colorization</a>:
 
