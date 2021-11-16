@@ -33,6 +33,8 @@ from keras.models import load_model, model_from_json, Model
 
 GRADIENT_PENALTY_WEIGHT = 10
 
+tf.compat.v1.disable_eager_execution()
+
 
 def deprocess(imgs):
     imgs = imgs * 255
@@ -62,14 +64,14 @@ def reconstruct_no(batchX, predictedY):
 
 
 def write_log(callback, names, logs, batch_no):
-
-    for name, value in zip(names, logs):
-        summary = tf.Summary()
-        summary_value = summary.value.add()
-        summary_value.simple_value = value
-        summary_value.tag = name
-        callback.writer.add_summary(summary, batch_no)
-        callback.writer.flush()
+    pass
+    # for name, value in zip(names, logs):
+    #     summary = tf.Summary()
+    #     summary_value = summary.value.add()
+    #     summary_value.simple_value = value
+    #     summary_value.tag = name
+    #     callback.writer.add_summary(summary, batch_no)
+    #     callback.writer.flush()
 
 
 def wasserstein_loss(y_true, y_pred):
@@ -251,7 +253,7 @@ class MODEL():
         outputModel = keras.layers.Conv2D(2, (3, 3), padding='same', strides=(
             1, 1), activation='sigmoid')(outputModel)
         outputModel = keras.layers.UpSampling2D(size=(2, 2))(outputModel)
-        final_model = Model(inputs=input_img, outputs=[
+        final_model = Model(inputs=[input_img], outputs=[
                             outputModel, global_featuresClass])
 
         return final_model
