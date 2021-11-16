@@ -299,7 +299,7 @@ class MODEL():
                 write_log(self.callback, self.disc_names,
                           d_loss, (epoch*total_batch+batch+1))
 
-                if (batch) % 1000 == 0:
+                if (batch) % 1 == 0:
                     print("[Epoch %d] [Batch %d/%d] [generator loss: %08f] [discriminator loss: %08f]" %
                           (epoch, batch, total_batch, g_loss[0], d_loss[0]))
             # save models after each epoch
