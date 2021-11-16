@@ -53,7 +53,7 @@ def sample_images(concatenate=True):
     avg_psnr = 0
     VGG_modelF = applications.vgg16.VGG16(weights='imagenet', include_top=True)
     save_models_path =os.path.join(config.MODEL_DIR,config.TEST_NAME)
-    save_path = os.path.join(config.MODEL_DIR, config.PRETRAINED)
+    save_path = os.path.join(save_models_path, config.PRETRAINED)
     print(save_path)
     colorizationModel = load_model(save_path)
     test_data = data.DATA(config.TEST_DIR)

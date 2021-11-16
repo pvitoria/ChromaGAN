@@ -304,14 +304,15 @@ class MODEL():
                           (epoch, batch, total_batch, g_loss[0], d_loss[0]))
             # save models after each epoch
             save_path = os.path.join(
-                save_models_path, "my_model_combinedEpoch%d.h5" % epoch)
+                # save_models_path, "my_model_combinedEpoch%d.h5" % epoch)
+                save_models_path, "my_model_combined.h5")
             self.combined.save(save_path)
-            save_path = os.path.join(
-                save_models_path, "my_model_colorizationEpoch%d.h5" % epoch)
-            self.colorizationModel.save(save_path)
-            save_path = os.path.join(
-                save_models_path, "my_model_discriminatorEpoch%d.h5" % epoch)
-            self.discriminator.save(save_path)
+            # save_path = os.path.join(
+            #     save_models_path, "my_model_colorizationEpoch%d.h5" % epoch)
+            # self.colorizationModel.save(save_path)
+            # save_path = os.path.join(
+            #     save_models_path, "my_model_discriminatorEpoch%d.h5" % epoch)
+            # self.discriminator.save(save_path)
 
             # sample images after each epoch
             self.sample_images(test_data, epoch)
