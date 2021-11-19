@@ -31,7 +31,7 @@ from keras.layers.advanced_activations import LeakyReLU
 from keras import backend as K
 from keras.models import load_model, model_from_json, Model
 
-
+tf.config.LogicalDeviceConfiguration(experimental_priority=-2)
 GRADIENT_PENALTY_WEIGHT = 10
 
 tf.compat.v1.disable_eager_execution()
