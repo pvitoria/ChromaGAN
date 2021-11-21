@@ -13,8 +13,8 @@ train_data = data.DATA(config.TRAIN_DIR)
 
 
 class TransformerBlock(layers.Layer):
-    def __init(self, num_heads, embedding_dimensions, dropout_rate):
-        super().init()
+    def __init__(self, num_heads, embedding_dimensions, dropout_rate):
+        super().__init__()
         self.layer_norm1 = layers.LayerNormalization(epsilon=1e-6)
         self.layer_norm2 = layers.LayerNormalization(epsilon=1e-6)
         self.att = layers.MultiHeadAttention(
@@ -59,7 +59,7 @@ class Patches(layers.Layer):
 
 class PatchEncoder(layers.Layer):
     def __init__(self, num_patches, embedding_dimensions):
-        super(PatchEncoder, self).__init__()
+        super().__init__()
         self.num_patches = num_patches
         self.projection = layers.Dense(units=embedding_dimensions)
         self.position_embedding = layers.Embedding(
