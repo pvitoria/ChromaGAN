@@ -1,8 +1,8 @@
 import cv2 as cv
 import numpy as np
 import tensorflow as tf
-from tensorflow import keras
-from tensorflow.keras import layers
+import keras
+import keras.layers as layers
 
 import config
 import dataClass as data
