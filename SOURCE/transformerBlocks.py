@@ -83,7 +83,7 @@ class PatchEncoder(layers.Layer):
 def mlp(x, hidden_units, dropout_rate):
     for units in hidden_units:
         x = layers.Dense(units, activation=tf.nn.gelu)(x)
-        x = layers.Dropout(dropout_rate)(x)
+        # x = layers.Dropout(dropout_rate)(x)
     return x
 
 
