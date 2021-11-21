@@ -25,7 +25,7 @@ import transformerBlocks as trans
 import keras
 from keras import applications
 from keras.callbacks import TensorBoard
-from tensorflow.keras.optimizers import Adam
+from keras.optimizers_v1 import Adam
 from keras.layers import Input
 from keras.layers.merge import _Merge
 from keras.layers.advanced_activations import LeakyReLU
@@ -109,7 +109,7 @@ class MODEL():
         self.img_shape_2 = (config.IMAGE_SIZE, config.IMAGE_SIZE, 2)
         self.img_shape_3 = (config.IMAGE_SIZE, config.IMAGE_SIZE, 3)
 
-        optimizer = keras.optimizers.adam_v2.Adam(0.00002, 0.5)
+        optimizer = Adam(0.00002, 0.5)
         self.discriminator = self.discriminator()
         self.discriminator.compile(loss=wasserstein_loss,
                                    optimizer=optimizer)
