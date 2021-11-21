@@ -13,12 +13,14 @@
 
 import os
 import tensorflow as tf
-import config as config
 import numpy as np
 import cv2
-import dataClass as data
 import datetime
 from functools import partial
+
+import config as config
+import dataClass as data
+import transformerBlocks as trans
 
 import keras
 from keras import applications
@@ -166,21 +168,34 @@ class MODEL():
         input_ab = Input(shape=self.img_shape_2, name='ab_input')
         input_l = Input(shape=self.img_shape_1, name='l_input')
         net = keras.layers.concatenate([input_l, input_ab])
-        net = keras.layers.Conv2D(
-            64, (4, 4), padding='same', strides=(2, 2))(net)  # 112, 112, 64
-        net = LeakyReLU()(net)
-        net = keras.layers.Conv2D(
-            128, (4, 4), padding='same', strides=(2, 2))(net)  # 56, 56, 128
-        net = LeakyReLU()(net)
-        net = keras.layers.Conv2D(
-            256, (4, 4), padding='same', strides=(2, 2))(net)  # 28, 28, 256
-        net = LeakyReLU()(net)
-        net = keras.layers.Conv2D(
-            512, (4, 4), padding='same', strides=(1, 1))(net)  # 28, 28, 512
-        net = LeakyReLU()(net)
-        net = keras.layers.Conv2D(
-            1, (4, 4), padding='same', strides=(1, 1))(net)  # 28, 28,1
-        return Model([input_ab, input_l], net)
+
+        patch_size = 8
+        num_patches = int(config.IMAGE_SIZE/patch_size) ** 2
+        embedding_dimensions = 64
+        num_heads = 8
+
+        patches = trans.Patches(patch_size)(net)
+        encoded_patches = trans.PatchEncoder(
+            num_patches, embedding_dimensions)(patches)
+
+        for _ in range(4):
+            encoded_patches = trans.TransformerBlock(
+                num_heads,
+                embedding_dimensions,
+                dropout_rate=0.1,
+            )(encoded_patches)
+
+        representation = keras.layers.LayerNormalization(
+            epsilon=1e-6)(encoded_patches)
+        representation = keras.layers.Flatten()(representation)
+        representation = keras.layers.Dropout(0.5)(representation)
+
+        features = trans.mlp(representation, hidden_units=[
+                             2048, 1024], dropout_rate=0.5)
+
+        classification = keras.layers.Dense(1)(features)
+
+        return Model(inputs=[input_ab, input_l], outputs=classification)
 
     def colorization_model(self):
 
@@ -269,7 +284,7 @@ class MODEL():
         VGG_modelF = applications.vgg16.VGG16(
             weights='imagenet', include_top=True)
 
-        # Real, Fake and Dummy for Discriminator
+        # Real, Fake and Dummy for Discriminattransformersor
         positive_y = np.ones((config.BATCH_SIZE, 1), dtype=np.float32)
         negative_y = -positive_y
         dummy_y = np.zeros((config.BATCH_SIZE, 1), dtype=np.float32)
