@@ -183,9 +183,12 @@ class MODEL():
             # Layer normalization 1.
             x1 = keras.layers.LayerNormalization(epsilon=1e-6)(encoded_patches)
             # Create a multi-head attention layer.
-            attention_output = keras.layers.MultiHeadAttention(
-                num_heads=num_heads, key_dim=embedding_dimensions, dropout=0.1
-            )(x1, x1)
+
+            # attention_output = keras.layers.MultiHeadAttention(
+            #     num_heads=num_heads, key_dim=embedding_dimensions, dropout=0.1
+            # )(x1, x1)
+            attention_output = x1
+
             # Skip connection 1.
             x2 = keras.layers.Add()([attention_output, encoded_patches])
             # Layer normalization 2.
