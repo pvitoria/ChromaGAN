@@ -85,13 +85,14 @@ def wasserstein_loss(y_true, y_pred):
 def gradient_penalty_loss(y_true, y_pred, averaged_samples,
                           gradient_penalty_weight):
 
-    gradients = K.gradients(y_pred, averaged_samples)[0]
-    gradients_sqr = K.square(gradients)
-    gradients_sqr_sum = K.sum(gradients_sqr,
-                              axis=np.arange(1, len(gradients_sqr.shape)))
-    gradient_l2_norm = K.sqrt(gradients_sqr_sum)
-    gradient_penalty = gradient_penalty_weight * K.square(1 - gradient_l2_norm)
-    return K.mean(gradient_penalty)
+    # gradients = K.gradients(y_pred, averaged_samples)[0]
+    # gradients_sqr = K.square(gradients)
+    # gradients_sqr_sum = K.sum(gradients_sqr,
+    #                           axis=np.arange(1, len(gradients_sqr.shape)))
+    # gradient_l2_norm = K.sqrt(gradients_sqr_sum)
+    # gradient_penalty = gradient_penalty_weight * K.square(1 - gradient_l2_norm)
+    # return K.mean(gradient_penalty)
+    return y_pred
 
 
 class RandomWeightedAverage(_Merge):
@@ -110,7 +111,7 @@ class MODEL():
         self.img_shape_3 = (config.IMAGE_SIZE, config.IMAGE_SIZE, 3)
 
         optimizer = Adam(0.00002, 0.5)
-        self.discriminator = self.discriminator()
+        self.discriminator = self.discriminator_new()()
         self.discriminator.compile(loss=wasserstein_loss,
                                    optimizer=optimizer)
 
@@ -212,7 +213,7 @@ class MODEL():
         representation = keras.layers.LayerNormalization(
             epsilon=1e-6)(encoded_patches)
         representation = keras.layers.Flatten()(representation)
-        # representation = keras.layers.Dropout(0.5)(representation)
+        representation = keras.layers.Dropout(0.5)(representation)
 
         features = trans.mlp(representation, hidden_units=[
                              2048, 1024], dropout_rate=0.5)
