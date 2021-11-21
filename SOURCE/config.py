@@ -11,7 +11,7 @@ OUT_DIR = os.path.join(ROOT_DIR, 'RESULT/'+DATASET+'/')
 MODEL_DIR = "/tmp/MVP_Project/"
 LOG_DIR = os.path.join(ROOT_DIR, 'LOGS/'+DATASET+'/')
 
-TRAIN_DIR = "train"  #  UPDATE
+TRAIN_DIR = "train_old"  #  UPDATE
 TEST_DIR = "test"  #  UPDATE
 
 # DATA INFORMATION
