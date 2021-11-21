@@ -196,10 +196,10 @@ class MODEL():
             # MLP.
             x3 = keras.layers.Dense(
                 2*embedding_dimensions, activation=tf.nn.gelu)(x3)
-            x3 = keras.layers.Dropout(0.5)(x3)
+            # x3 = keras.layers.Dropout(0.5)(x3)
             x3 = keras.layers.Dense(
                 embedding_dimensions, activation=tf.nn.gelu)(x3)
-            x3 = keras.layers.Dropout(0.5)(x3)
+            # x3 = keras.layers.Dropout(0.5)(x3)
             # Skip connection 2.
             encoded_patches = keras.layers.Add()([x3, x2])
 
