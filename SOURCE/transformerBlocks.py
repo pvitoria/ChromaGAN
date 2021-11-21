@@ -7,8 +7,7 @@ import keras.layers as layers
 import config
 import dataClass as data
 
-input_shape = (config.IMAGE_SIZE, config.IMAGE_SIZE, 3)
-train_data = data.DATA(config.TRAIN_DIR)
+tf.compat.v1.experimental.output_all_intermediates(True)
 
 
 class TransformerBlock(layers.Layer):
