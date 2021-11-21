@@ -36,6 +36,7 @@ from keras.models import load_model, model_from_json, Model
 GRADIENT_PENALTY_WEIGHT = 10
 
 tf.compat.v1.disable_eager_execution()
+tf.compat.v1.experimental.output_all_intermediates(True)
 
 
 def deprocess(imgs):
