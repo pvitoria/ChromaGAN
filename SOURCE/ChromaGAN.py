@@ -179,12 +179,30 @@ class MODEL():
         encoded_patches = trans.PatchEncoder(
             num_patches, embedding_dimensions)(patches)
 
-        for _ in range(4):
-            encoded_patches = trans.TransformerBlock(
-                num_heads,
-                embedding_dimensions,
-                dropout_rate=0.1,
-            )(encoded_patches)
+        # for _ in range(4):
+        encoded_patches = trans.TransformerBlock(
+            num_heads,
+            embedding_dimensions,
+            dropout_rate=0.1,
+        )(encoded_patches)
+
+        encoded_patches = trans.TransformerBlock(
+            num_heads,
+            embedding_dimensions,
+            dropout_rate=0.1,
+        )(encoded_patches)
+
+        encoded_patches = trans.TransformerBlock(
+            num_heads,
+            embedding_dimensions,
+            dropout_rate=0.1,
+        )(encoded_patches)
+
+        encoded_patches = trans.TransformerBlock(
+            num_heads,
+            embedding_dimensions,
+            dropout_rate=0.1,
+        )(encoded_patches)
 
         representation = keras.layers.LayerNormalization(
             epsilon=1e-6)(encoded_patches)
