@@ -164,7 +164,7 @@ class MODEL():
         self.test_loss_array = []
         self.g_loss_array = []
 
-    def discriminator(self):
+    def discriminator_new(self):
 
         input_ab = Input(shape=self.img_shape_2, name='ab_input')
         input_l = Input(shape=self.img_shape_1, name='l_input')
@@ -220,6 +220,27 @@ class MODEL():
         classification = keras.layers.Dense(1)(features)
 
         return Model(inputs=[input_ab, input_l], outputs=classification)
+
+    def discriminator(self):
+
+        input_ab = Input(shape=self.img_shape_2, name='ab_input')
+        input_l = Input(shape=self.img_shape_1, name='l_input')
+        net = keras.layers.concatenate([input_l, input_ab])
+        net = keras.layers.Conv2D(
+            64, (4, 4), padding='same', strides=(2, 2))(net)  # 112, 112, 64
+        net = LeakyReLU()(net)
+        net = keras.layers.Conv2D(
+            128, (4, 4), padding='same', strides=(2, 2))(net)  # 56, 56, 128
+        net = LeakyReLU()(net)
+        net = keras.layers.Conv2D(
+            256, (4, 4), padding='same', strides=(2, 2))(net)  # 28, 28, 256
+        net = LeakyReLU()(net)
+        net = keras.layers.Conv2D(
+            512, (4, 4), padding='same', strides=(1, 1))(net)  # 28, 28, 512
+        net = LeakyReLU()(net)
+        net = keras.layers.Conv2D(
+            1, (4, 4), padding='same', strides=(1, 1))(net)  # 28, 28,1
+        return Model([input_ab, input_l], net)
 
     def colorization_model(self):
 
