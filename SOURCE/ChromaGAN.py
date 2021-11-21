@@ -179,30 +179,32 @@ class MODEL():
         encoded_patches = trans.PatchEncoder(
             num_patches, embedding_dimensions)(patches)
 
-        # for _ in range(4):
-        encoded_patches = trans.TransformerBlock(
-            num_heads,
-            embedding_dimensions,
-            dropout_rate=0.1,
-        )(encoded_patches)
+        for _ in range(4):
+            # Layer normalization 1.
+            x1 = keras.layers.LayerNormalization(epsilon=1e-6)(encoded_patches)
+            # Create a multi-head attention layer.
+            attention_output = keras.layers.MultiHeadAttention(
+                num_heads=num_heads, key_dim=embedding_dimensions, dropout=0.1
+            )(x1, x1)
+            # Skip connection 1.
+            x2 = keras.layers.Add()([attention_output, encoded_patches])
+            # Layer normalization 2.
+            x3 = keras.layers.LayerNormalization(epsilon=1e-6)(x2)
+            # MLP.
+            x3 = keras.layers.Dense(
+                2*embedding_dimensions, activation=tf.nn.gelu)(x3)
+            x3 = keras.layers.Dropout(0.5)(x3)
+            x3 = keras.layers.Dense(
+                embedding_dimensions, activation=tf.nn.gelu)(x3)
+            x3 = keras.layers.Dropout(0.5)(x3)
+            # Skip connection 2.
+            encoded_patches = keras.layers.Add()([x3, x2])
 
-        encoded_patches = trans.TransformerBlock(
-            num_heads,
-            embedding_dimensions,
-            dropout_rate=0.1,
-        )(encoded_patches)
-
-        encoded_patches = trans.TransformerBlock(
-            num_heads,
-            embedding_dimensions,
-            dropout_rate=0.1,
-        )(encoded_patches)
-
-        encoded_patches = trans.TransformerBlock(
-            num_heads,
-            embedding_dimensions,
-            dropout_rate=0.1,
-        )(encoded_patches)
+            # encoded_patches = trans.TransformerBlock(
+            #     num_heads,
+            #     embedding_dimensions,
+            #     dropout_rate=0.1,
+            # )(encoded_patches)
 
         representation = keras.layers.LayerNormalization(
             epsilon=1e-6)(encoded_patches)
