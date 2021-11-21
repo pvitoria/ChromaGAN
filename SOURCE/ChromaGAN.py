@@ -109,7 +109,7 @@ class MODEL():
         self.img_shape_2 = (config.IMAGE_SIZE, config.IMAGE_SIZE, 2)
         self.img_shape_3 = (config.IMAGE_SIZE, config.IMAGE_SIZE, 3)
 
-        optimizer = Adam(0.00002, 0.5)
+        optimizer = keras.optimizers.adam_v2.Adam(0.00002, 0.5)
         self.discriminator = self.discriminator()
         self.discriminator.compile(loss=wasserstein_loss,
                                    optimizer=optimizer)
