@@ -25,7 +25,7 @@ import transformerBlocks as trans
 import keras
 from keras import applications
 from keras.callbacks import TensorBoard
-from keras.optimizers_v1 import Adam
+from keras.optimizer_v1 import Adam
 from keras.layers import Input
 from keras.layers.merge import _Merge
 from keras.layers.advanced_activations import LeakyReLU
