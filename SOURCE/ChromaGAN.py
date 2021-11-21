@@ -329,7 +329,7 @@ class MODEL():
         VGG_modelF = applications.vgg16.VGG16(
             weights='imagenet', include_top=True)
 
-        # Real, Fake and Dummy for Discriminattransformersor
+        # Real, Fake and Dummy for Discriminator
         positive_y = np.ones((config.BATCH_SIZE, 1), dtype=np.float32)
         negative_y = -positive_y
         dummy_y = np.zeros((config.BATCH_SIZE, 1), dtype=np.float32)
