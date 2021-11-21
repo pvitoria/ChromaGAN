@@ -111,7 +111,7 @@ class MODEL():
         self.img_shape_3 = (config.IMAGE_SIZE, config.IMAGE_SIZE, 3)
 
         optimizer = Adam(0.00002, 0.5)
-        self.discriminator = self.discriminator_new()()
+        self.discriminator = self.discriminator_new()
         self.discriminator.compile(loss=wasserstein_loss,
                                    optimizer=optimizer)
 
