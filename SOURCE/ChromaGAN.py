@@ -15,6 +15,8 @@ import os
 import tensorflow as tf
 import numpy as np
 import cv2
+import dataClass as data
+import dataClassDali as data_dali
 import datetime
 from functools import partial
 
@@ -296,9 +298,9 @@ class MODEL():
             weights='imagenet', include_top=True)
 
         # Real, Fake and Dummy for Discriminator
-        positive_y = np.ones((config.BATCH_SIZE, 1), dtype=np.float32)
+        positive_y = np.ones(
+            (config.BATCH_SIZE * config.SEQUENCE_LENGTH, 1), dtype=np.float32)
         negative_y = -positive_y
-        # dummy_y = np.zeros((config.BATCH_SIZE, 1), dtype=np.float32)
 
         # total number of batches in one epoch
         total_batch = int(data.size/config.BATCH_SIZE)
@@ -306,11 +308,13 @@ class MODEL():
         for epoch in range(config.NUM_EPOCHS):
             for batch in range(total_batch):
                 # new batch
-                trainL, trainAB, _, original, l_img_oritList = data.generate_batch()
-                l_3 = np.tile(trainL, [1, 1, 1, 3])
+                #trainL, trainAB, _, original, l_img_oritList = data.generate_batch()
+                #l_3 = np.tile(trainL, [1, 1, 1, 3])
+
+                trainL, trainAB, l_3 = data.generate_batch()
 
                 # GT vgg
-                predictVGG = VGG_modelF.predict(l_3)
+                predictVGG = VGG_modelF.predict(l_3, steps=1)
 
                 # train generator
                 g_loss = self.combined.train_on_batch([l_3, trainL],
@@ -374,7 +378,9 @@ if __name__ == '__main__':
         log.write(str(datetime.datetime.now()) + "\n")
 
         print('load training data from ' + config.TRAIN_DIR)
-        train_data = data.DATA(config.TRAIN_DIR)
+        #train_data = data.DATA(config.TRAIN_DIR)
+        train_data = data_dali.VideoDataLoader(
+            config.TRAIN_DIR, config.IMAGE_SIZE, config.BATCH_SIZE, config.SEQUENCE_LENGTH, config.VIDEO_STRIDE)
         test_data = data.DATA(config.TEST_DIR)
         assert config.BATCH_SIZE <= train_data.size, "The batch size should be smaller or equal to the number of training images --> modify it in config.py"
         print("Train data loaded")

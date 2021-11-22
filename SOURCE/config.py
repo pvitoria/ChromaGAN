@@ -11,13 +11,14 @@ OUT_DIR = os.path.join(ROOT_DIR, 'RESULT/'+DATASET+'/')
 MODEL_DIR = "/tmp/MVP_Project/"
 LOG_DIR = os.path.join(ROOT_DIR, 'LOGS/'+DATASET+'/')
 
-TRAIN_DIR = "train_old"  #  UPDATE
+TRAIN_DIR = "train"  #  UPDATE
 TEST_DIR = "test"  #  UPDATE
 
 # DATA INFORMATION
 IMAGE_SIZE = 224
-BATCH_SIZE = 10
-
+BATCH_SIZE = 2
+SEQUENCE_LENGTH = 6
+VIDEO_STRIDE = 12
 
 # TRAINING INFORMATION
 PRETRAINED = "modelCombined.h5"  #  UPDATE
