@@ -32,7 +32,7 @@ from keras.layers.advanced_activations import LeakyReLU
 from keras import backend as K
 from keras.models import load_model, model_from_json, Model
 
-tf.compat.v1.disable_eager_execution()
+# tf.compat.v1.disable_eager_execution()
 tf.compat.v1.experimental.output_all_intermediates(True)
 
 
@@ -336,6 +336,7 @@ class MODEL():
                                                       [trainAB, predictVGG, positive_y])
                 # train discriminator
                 predAB, _ = self.colorizationModel(l_3)
+                predAB = predAB.numpy()
 
                 d_loss = self.discriminator_model.train_on_batch(
                     [trainL, trainAB, predAB], [positive_y, negative_y])
