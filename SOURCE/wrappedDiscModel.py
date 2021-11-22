@@ -1,6 +1,7 @@
 import tensorflow as tf
 import keras as keras
 import config as config
+import numpy as np
 
 GRADIENT_PENALTY_WEIGHT = 10
 
