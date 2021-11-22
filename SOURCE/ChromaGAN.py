@@ -28,13 +28,9 @@ from keras import applications
 from keras.callbacks import TensorBoard
 from tensorflow.keras.optimizers import Adam
 from keras.layers import Input
-from keras.layers.merge import _Merge
 from keras.layers.advanced_activations import LeakyReLU
 from keras import backend as K
 from keras.models import load_model, model_from_json, Model
-
-
-GRADIENT_PENALTY_WEIGHT = 10
 
 tf.compat.v1.disable_eager_execution()
 tf.compat.v1.experimental.output_all_intermediates(True)
@@ -83,26 +79,6 @@ def wasserstein_loss(y_true, y_pred):
     return tf.reduce_mean(y_pred)
 
 
-def gradient_penalty_loss(y_true, y_pred, averaged_samples,
-                          gradient_penalty_weight):
-
-    # gradients = K.gradients(y_pred, averaged_samples)[0]
-    # gradients_sqr = K.square(gradients)
-    # gradients_sqr_sum = K.sum(gradients_sqr,
-    #                           axis=np.arange(1, len(gradients_sqr.shape)))
-    # gradient_l2_norm = K.sqrt(gradients_sqr_sum)
-    # gradient_penalty = gradient_penalty_weight * K.square(1 - gradient_l2_norm)
-    # return K.mean(gradient_penalty)
-    return y_pred
-
-
-class RandomWeightedAverage(_Merge):
-
-    def _merge_function(self, inputs):
-        weights = K.random_uniform((config.BATCH_SIZE, 1, 1, 1))
-        return (weights * inputs[0]) + ((1 - weights) * inputs[1])
-
-
 class MODEL():
 
     def __init__(self):
@@ -112,7 +88,7 @@ class MODEL():
         self.img_shape_3 = (config.IMAGE_SIZE, config.IMAGE_SIZE, 3)
 
         optimizer = Adam(0.00002, 0.5)
-        self.discriminator = self.discriminator_new()
+        self.discriminator = self.discriminator()
         self.discriminator.compile(loss=wasserstein_loss,
                                    optimizer=optimizer)
 
