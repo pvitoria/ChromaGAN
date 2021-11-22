@@ -106,24 +106,6 @@ class MODEL():
         discriminator_output_from_real_samples = self.discriminator(
             [img_ab_real, img_L])
 
-        # averaged_samples = RandomWeightedAverage()([img_ab_real,
-        #                                             predAB])
-        # averaged_samples_out = self.discriminator([averaged_samples, img_L])
-        # partial_gp_loss = partial(gradient_penalty_loss,
-        #                           averaged_samples=averaged_samples,
-        #                           gradient_penalty_weight=GRADIENT_PENALTY_WEIGHT)
-        # partial_gp_loss.__name__ = 'gradient_penalty'
-
-        # self.discriminator_model = Model(inputs=[img_L, img_ab_real, predAB],
-        #                                  outputs=[discriminator_output_from_real_samples,
-        #                                           discPredAB,
-        #                                           averaged_samples_out])
-
-        # self.discriminator_model.compile(optimizer=optimizer,
-        #                                  loss=[wasserstein_loss,
-        #                                        wasserstein_loss,
-        #                                        partial_gp_loss], loss_weights=[-1.0, 1.0, 1.0])
-
         self.discriminator_model = wrapper.WrappedDiscriminatorModel(inputs=[img_L, img_ab_real, img_L_3],
                                                                      outputs=[discriminator_output_from_real_samples,
                                                                               discPredAB],
