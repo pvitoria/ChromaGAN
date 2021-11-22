@@ -21,6 +21,7 @@ from functools import partial
 import config as config
 import dataClass as data
 import transformerBlocks as trans
+import wrappedDiscModel as wrapper
 
 import keras
 from keras import applications
@@ -129,23 +130,30 @@ class MODEL():
         discriminator_output_from_real_samples = self.discriminator(
             [img_ab_real, img_L])
 
-        averaged_samples = RandomWeightedAverage()([img_ab_real,
-                                                    predAB])
-        averaged_samples_out = self.discriminator([averaged_samples, img_L])
-        partial_gp_loss = partial(gradient_penalty_loss,
-                                  averaged_samples=averaged_samples,
-                                  gradient_penalty_weight=GRADIENT_PENALTY_WEIGHT)
-        partial_gp_loss.__name__ = 'gradient_penalty'
+        # averaged_samples = RandomWeightedAverage()([img_ab_real,
+        #                                             predAB])
+        # averaged_samples_out = self.discriminator([averaged_samples, img_L])
+        # partial_gp_loss = partial(gradient_penalty_loss,
+        #                           averaged_samples=averaged_samples,
+        #                           gradient_penalty_weight=GRADIENT_PENALTY_WEIGHT)
+        # partial_gp_loss.__name__ = 'gradient_penalty'
 
-        self.discriminator_model = Model(inputs=[img_L, img_ab_real, img_L_3],
-                                         outputs=[discriminator_output_from_real_samples,
-                                                  discPredAB,
-                                                  averaged_samples_out])
+        # self.discriminator_model = Model(inputs=[img_L, img_ab_real, predAB],
+        #                                  outputs=[discriminator_output_from_real_samples,
+        #                                           discPredAB,
+        #                                           averaged_samples_out])
 
-        self.discriminator_model.compile(optimizer=optimizer,
-                                         loss=[wasserstein_loss,
-                                               wasserstein_loss,
-                                               partial_gp_loss], loss_weights=[-1.0, 1.0, 1.0])
+        # self.discriminator_model.compile(optimizer=optimizer,
+        #                                  loss=[wasserstein_loss,
+        #                                        wasserstein_loss,
+        #                                        partial_gp_loss], loss_weights=[-1.0, 1.0, 1.0])
+
+        self.discriminator_model = wrapper.WrappedDiscriminatorModel(inputs=[img_L, img_ab_real, predAB],
+                                                                     outputs=[discriminator_output_from_real_samples,
+                                                                              discPredAB],
+                                                                     discriminator=self.discriminator)
+
+        self.discriminator_model.compile(optimizer=optimizer)
 
         self.colorizationModel.trainable = True
         self.discriminator.trainable = False
@@ -333,7 +341,7 @@ class MODEL():
         # Real, Fake and Dummy for Discriminator
         positive_y = np.ones((config.BATCH_SIZE, 1), dtype=np.float32)
         negative_y = -positive_y
-        dummy_y = np.zeros((config.BATCH_SIZE, 1), dtype=np.float32)
+        # dummy_y = np.zeros((config.BATCH_SIZE, 1), dtype=np.float32)
 
         # total number of batches in one epoch
         total_batch = int(data.size/config.BATCH_SIZE)
@@ -351,8 +359,10 @@ class MODEL():
                 g_loss = self.combined.train_on_batch([l_3, trainL],
                                                       [trainAB, predictVGG, positive_y])
                 # train discriminator
+                predAB, _ = self.colorizationModel(img_L_3)
+
                 d_loss = self.discriminator_model.train_on_batch(
-                    [trainL, trainAB, l_3], [positive_y, negative_y, dummy_y])
+                    [trainL, trainAB, predAB], [positive_y, negative_y])
 
                 # update log files
                 write_log(self.callback, self.train_names,
