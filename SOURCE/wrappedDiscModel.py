@@ -70,7 +70,7 @@ class WrappedDiscriminatorModel(keras.Model):
         d_gradient = tape.gradient(
             d_loss, self.trainable_variables)
         # Update the weights of the discriminator using the discriminator optimizer
-        self.d_optimizer.apply_gradients(
+        self.optimizer.apply_gradients(
             zip(d_gradient, self.trainable_variables)
         )
         return {"loss": d_loss}
