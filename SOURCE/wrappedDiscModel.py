@@ -43,9 +43,9 @@ class WrappedDiscriminatorModel(keras.Model):
         grads = tape.gradient(pred, [averaged_samples])[0]
 
         grads_sqr = tf.square(grads)
-        grads_sqr_sum = tf.reduce_sum(gradients_sqr,
+        grads_sqr_sum = tf.reduce_sum(grads_sqr,
                                       axis=np.arange(1, len(grads_sqr.shape)))
-        grad_l2_norm = tf.sqrt(gradients_sqr_sum)
+        grad_l2_norm = tf.sqrt(grads_sqr_sum)
         gradient_penalty = gradient_penalty_weight * \
             tf.square(1 - grad_l2_norm)
         return tf.reduce_mean(gradient_penalty)
