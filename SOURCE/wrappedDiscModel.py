@@ -29,6 +29,9 @@ class WrappedDiscriminatorModel(keras.Model):
         self.discriminator = discriminator
         self.colourer = colourer
 
+    def get_config(self):
+        return super().get_config()
+
     def compile(self, optimizer):
         super().compile(optimizer)
         self.optimizer = optimizer

@@ -56,6 +56,7 @@ class Patches(layers.Layer):
         config.update({
             "patch_size": self.patch_size
         })
+        return config
 
     def call(self, images):
         batch_size = tf.shape(images)[0]
@@ -75,10 +76,19 @@ class PatchEncoder(layers.Layer):
     def __init__(self, num_patches, embedding_dimensions):
         super().__init__()
         self.num_patches = num_patches
+        self.embedding_dimensions = embedding_dimensions
         self.projection = layers.Dense(units=embedding_dimensions)
         self.position_embedding = layers.Embedding(
             input_dim=num_patches, output_dim=embedding_dimensions
         )
+
+    def get_config(self):
+        config = super().get_config()
+        config.update({
+            "num_patches": self.num_patches,
+            "embedding_dimensions": self.embedding_dimensions
+        })
+        return config
 
     def call(self, patch):
         positions = tf.range(start=0, limit=self.num_patches, delta=1)
