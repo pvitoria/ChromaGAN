@@ -40,7 +40,7 @@ class WrappedDiscriminatorModel(keras.Model):
             tape.watch(averaged_samples)
             pred = self.discriminator([averaged_samples, img_L])
 
-        grads = tape.gradient(pred, [interpolated])[0]
+        grads = tape.gradient(pred, [averaged_samples])[0]
 
         grads_sqr = tf.square(grads)
         grads_sqr_sum = tf.reduce_sum(gradients_sqr,
