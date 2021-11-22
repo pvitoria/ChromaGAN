@@ -8,7 +8,8 @@ GRADIENT_PENALTY_WEIGHT = 10
 
 class RandomWeightedAverage(keras.layers.merge._Merge):
     def _merge_function(self, inputs):
-        weights = tf.random.uniform((config.BATCH_SIZE, 1, 1, 1))
+        weights = tf.random.uniform(
+            (config.BATCH_SIZE * config.SEQUENCE_LENGTH, 1, 1, 1))
         return (weights * inputs[0]) + ((1 - weights) * inputs[1])
 
 
