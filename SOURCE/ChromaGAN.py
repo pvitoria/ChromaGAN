@@ -88,7 +88,7 @@ class MODEL():
         self.img_shape_3 = (config.IMAGE_SIZE, config.IMAGE_SIZE, 3)
 
         optimizer = Adam(0.00002, 0.5)
-        self.discriminator = self.discriminator()
+        self.discriminator = self.discriminator_new()
         self.discriminator.compile(loss=wasserstein_loss,
                                    optimizer=optimizer)
 
@@ -151,11 +151,9 @@ class MODEL():
             # Layer normalization 1.
             x1 = keras.layers.LayerNormalization(epsilon=1e-6)(encoded_patches)
             # Create a multi-head attention layer.
-
-            # attention_output = keras.layers.MultiHeadAttention(
-            #     num_heads=num_heads, key_dim=embedding_dimensions, dropout=0.1
-            # )(x1, x1)
-            attention_output = x1
+            attention_output = keras.layers.MultiHeadAttention(
+                num_heads=num_heads, key_dim=embedding_dimensions, dropout=0.1
+            )(x1, x1)
 
             # Skip connection 1.
             x2 = keras.layers.Add()([attention_output, encoded_patches])
@@ -164,10 +162,10 @@ class MODEL():
             # MLP.
             x3 = keras.layers.Dense(
                 2*embedding_dimensions, activation=tf.nn.gelu)(x3)
-            # x3 = keras.layers.Dropout(0.5)(x3)
+            x3 = keras.layers.Dropout(0.1)(x3)
             x3 = keras.layers.Dense(
                 embedding_dimensions, activation=tf.nn.gelu)(x3)
-            # x3 = keras.layers.Dropout(0.5)(x3)
+            x3 = keras.layers.Dropout(0.1)(x3)
             # Skip connection 2.
             encoded_patches = keras.layers.Add()([x3, x2])
 
