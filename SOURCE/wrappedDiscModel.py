@@ -16,10 +16,14 @@ class WrappedDiscriminatorModel(keras.Model):
     def __init__(
         self,
         discriminator,
+        colourer,
         **kwargs,
     ):
-        super().__init__(kwargs)
+        inputs = kwargs.get("inputs", None)
+        outputs = kwargs.get("outputs", None)
+        super().__init__(inputs=inputs, outputs=outputs)
         self.discriminator = discriminator
+        self.colourer = colourer
 
     def compile(self, optimizer):
         super().compile(optimizer)
@@ -45,8 +49,10 @@ class WrappedDiscriminatorModel(keras.Model):
 
     def train_step(self, data):
         (x, y) = data
-        (img_L, img_ab_real, img_ab_fake) = x
+        (img_L, img_ab_real, img_l3) = x
         (positive_y, negative_y) = y
+
+        img_ab_fake, _ = self.colourer(img_l3)
 
         with tf.GradientTape() as tape:
             y_pred = self(x, training=True)

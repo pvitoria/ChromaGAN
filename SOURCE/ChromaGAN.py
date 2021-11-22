@@ -124,10 +124,11 @@ class MODEL():
         #                                        wasserstein_loss,
         #                                        partial_gp_loss], loss_weights=[-1.0, 1.0, 1.0])
 
-        self.discriminator_model = wrapper.WrappedDiscriminatorModel(inputs=[img_L, img_ab_real, predAB],
+        self.discriminator_model = wrapper.WrappedDiscriminatorModel(inputs=[img_L, img_ab_real, img_L_3],
                                                                      outputs=[discriminator_output_from_real_samples,
                                                                               discPredAB],
-                                                                     discriminator=self.discriminator)
+                                                                     discriminator=self.discriminator,
+                                                                     colourer=self.colorizationModel)
 
         self.discriminator_model.compile(optimizer=optimizer)
 
@@ -335,11 +336,8 @@ class MODEL():
                 g_loss = self.combined.train_on_batch([l_3, trainL],
                                                       [trainAB, predictVGG, positive_y])
                 # train discriminator
-                predAB, _ = self.colorizationModel(l_3)
-                predAB = predAB.numpy()
-
                 d_loss = self.discriminator_model.train_on_batch(
-                    [trainL, trainAB, predAB], [positive_y, negative_y])
+                    [trainL, trainAB, l_3], [positive_y, negative_y])
 
                 # update log files
                 write_log(self.callback, self.train_names,
