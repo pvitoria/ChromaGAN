@@ -335,7 +335,7 @@ class MODEL():
                 g_loss = self.combined.train_on_batch([l_3, trainL],
                                                       [trainAB, predictVGG, positive_y])
                 # train discriminator
-                predAB, _ = self.colorizationModel(img_L_3)
+                predAB, _ = self.colorizationModel(l_3)
 
                 d_loss = self.discriminator_model.train_on_batch(
                     [trainL, trainAB, predAB], [positive_y, negative_y])
