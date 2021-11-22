@@ -66,8 +66,6 @@ class WrappedDiscriminatorModel(keras.Model):
             d_loss += wasserstein_loss(negative_y, fake_pred)
             d_loss += self.gradient_penalty(img_ab_real, img_ab_fake, img_L)
 
-            d_loss = gp
-
         # Get the gradients w.r.t the discriminator loss
         d_gradient = tape.gradient(
             d_loss, self.trainable_variables)
