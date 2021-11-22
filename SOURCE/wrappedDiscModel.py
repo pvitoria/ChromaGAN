@@ -73,4 +73,4 @@ class WrappedDiscriminatorModel(keras.Model):
         self.optimizer.apply_gradients(
             zip(d_gradient, self.trainable_variables)
         )
-        return {"loss": d_loss}
+        return {"loss": [d_loss]}
